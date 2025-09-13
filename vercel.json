@@ -1,15 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "client/dist/**/*",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "server/dist/server.js",
-      "use": "@vercel/node"
-    }
-  ],
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "pnpm run build",
   "routes": [
     {
       "src": "/api/(.*)",
@@ -19,7 +11,5 @@
       "src": "/(.*)",
       "dest": "/client/dist/index.html"
     }
-  ],
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "pnpm run build"
+  ]
 }
