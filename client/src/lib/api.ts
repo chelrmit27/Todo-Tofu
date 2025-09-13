@@ -2,6 +2,11 @@ import axios from 'axios';
 
 // Determine API base URL based on environment
 const getApiBaseUrl = () => {
+  // Use environment variable if available (for production deployment)
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
   // In production (Vercel), use relative path if on same domain
   if (import.meta.env.PROD) {
     return '/api';
@@ -10,6 +15,9 @@ const getApiBaseUrl = () => {
   // For development, use localhost
   return 'http://localhost:5001/api';
 };
+
+// Export the base URL function so other files can use it
+export { getApiBaseUrl };
 
 // Create centralized API instance
 export const api = axios.create({

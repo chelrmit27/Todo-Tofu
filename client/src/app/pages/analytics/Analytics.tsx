@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCategoryContext } from '../../../context/CategoryContext';
+import { api } from '../../../lib/api';
 
 interface AnalyticsData {
   weekStart: string;
@@ -48,33 +49,17 @@ const Analytics = () => {
         console.log('Fetching data for last week:', lastWeekStr);
 
         // Fetch this week's data
-        const thisWeekResponse = await fetch(
-          `http://localhost:5001/api/aggregation/analytics/weekly?date=${todayStr}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          },
+        const thisWeekResponse = await api.get(
+          `/aggregation/analytics/weekly?date=${todayStr}`
         );
 
         // Fetch last week's data
-        const lastWeekResponse = await fetch(
-          `http://localhost:5001/api/aggregation/analytics/weekly?date=${lastWeekStr}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          },
+        const lastWeekResponse = await api.get(
+          `/aggregation/analytics/weekly?date=${lastWeekStr}`
         );
 
-        if (!thisWeekResponse.ok || !lastWeekResponse.ok) {
-          throw new Error('Failed to fetch analytics data');
-        }
-
-        const thisWeekDataResult = await thisWeekResponse.json();
-        const lastWeekDataResult = await lastWeekResponse.json();
+        const thisWeekDataResult = thisWeekResponse.data;
+        const lastWeekDataResult = lastWeekResponse.data;
 
         console.log('This week data:', thisWeekDataResult);
         console.log('Last week data:', lastWeekDataResult);

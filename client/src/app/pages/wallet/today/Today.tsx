@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NewTask from './NewTask';
 import TaskList from './TaskList';
-import axios from 'axios';
+import { api } from '@/lib/api';
 
 const Today = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -21,10 +21,7 @@ const Today = () => {
       };
 
       // Fetch categories
-      const categoryResponse = await axios.get(
-        'http://localhost:5001/api/categories',
-        config,
-      );
+      const categoryResponse = await api.get('/categories');
       const transformedCategories = categoryResponse.data.reduce(
         (
           acc: Record<string, { name: string; color?: string }>,
@@ -39,10 +36,7 @@ const Today = () => {
 
       // Fetch tasks
       const today = new Date().toISOString().split('T')[0];
-      const taskResponse = await axios.get(
-        `http://localhost:5001/api/tasks?date=${today}`,
-        config,
-      );
+      const taskResponse = await api.get(`/tasks?date=${today}`);
       const tasksWithColors = taskResponse.data.tasks.map((task: any) => {
         const category = transformedCategories[task.categoryId];
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '../lib/api';
 
 // Define the shape of the category context
 interface Category {
@@ -46,10 +46,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
       };
 
       try {
-        const categoryResponse = await axios.get(
-          'http://localhost:5001/api/categories',
-          config,
-        );
+        const categoryResponse = await api.get('/categories');
         const transformedCategories = categoryResponse.data.reduce(
           (acc: Record<string, Category>, category: any) => {
             acc[category._id] = { name: category.name, color: category.color };

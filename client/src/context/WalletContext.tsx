@@ -6,7 +6,7 @@ import React, {
   useCallback,
   ReactNode,
 } from 'react';
-import axios from 'axios';
+import { api } from '../lib/api';
 
 // Types
 interface WalletData {
@@ -63,15 +63,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         return;
       }
 
-      const response = await axios.get(
-        'http://localhost:5001/api/tasks/today',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          timeout: 10000,
-        },
-      );
+      const response = await api.get('/tasks/today');
 
       console.log('WalletContext - API Response:', response.data);
 

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/stores/useAuth';
 import { useTheme } from '@/context/ThemeContext';
+import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { ArrowLeft } from 'lucide-react';
 interface LoginData {
@@ -60,21 +61,15 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
     try {
       console.log(1);
-      const response = await fetch('http://localhost:5001/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-        }),
+      const response = await api.post('/auth/login', {
+        username: formData.username,
+        password: formData.password,
       });
       console.log(2);
 
-      const data = await response.json();
+      const data = response.data;
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('Login successful:', data);
         console.log('User data received:', data.user);
         console.log('Token received:', data.token);

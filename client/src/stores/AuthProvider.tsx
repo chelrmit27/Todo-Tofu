@@ -6,6 +6,7 @@ import {
   ReactNode,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../lib/api';
 
 // Constants for inactivity timeout
 const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
@@ -48,20 +49,10 @@ const getUser = async (): Promise<AppUser | null> => {
     // Validate token with server (with fallback for development)
     try {
       console.log('🌐 Validating token with server...');
-      const response = await fetch('http://localhost:5001/api/auth/validate', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        console.log('🚨 Token validation failed, status:', response.status);
-        throw new Error('Token validation failed');
-      }
+      const response = await api.get('/auth/validate');
 
       console.log('✅ Token validated successfully');
+      const data = response.data;
     } catch (error) {
       console.log('🚨 Token validation error:', error);
 
@@ -124,23 +115,10 @@ const updateWeeklyAnalytics = async (): Promise<void> => {
 
     console.log('Updating weekly analytics...');
 
-    const response = await fetch(
-      'http://localhost:5001/api/aggregation/analytics/weekly/update',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    );
+    const response = await api.post('/aggregation/analytics/weekly/update');
 
-    if (response.ok) {
-      localStorage.setItem('lastAnalyticsUpdate', today);
-      console.log('Weekly analytics updated successfully');
-    } else {
-      console.error('Failed to update weekly analytics:', response.statusText);
-    }
+    localStorage.setItem('lastAnalyticsUpdate', today);
+    console.log('Weekly analytics updated successfully');
   } catch (error) {
     console.error('Error updating weekly analytics:', error);
   }

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTheme } from '@/context/ThemeContext';
+import { api } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { ArrowLeft } from 'lucide-react';
 
@@ -122,20 +123,10 @@ export const Register: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch(
-        'http://localhost:5001/api/auth/register/user',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        },
-      );
+      const response = await api.post('/auth/register/user', formData);
+      const data = response.data;
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         toast.success('Registration successful!');
         navigate('/auth/login');
       } else {

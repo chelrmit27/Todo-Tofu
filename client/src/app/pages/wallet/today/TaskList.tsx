@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectValue,
 } from '@/components/ui/select';
-import axios from 'axios';
+import { api } from '@/lib/api';
 
 const TaskList = ({
   tasks,
@@ -70,11 +70,7 @@ const TaskList = ({
         },
       };
 
-      const response = await axios.patch(
-        `http://localhost:5001/api/tasks/${editingTaskId}`,
-        updatedTask,
-        config,
-      );
+      const response = await api.patch(`/tasks/${editingTaskId}`, updatedTask);
 
       console.log('Task updated successfully:', response.data);
       setEditingTaskId(null);
@@ -110,11 +106,7 @@ const TaskList = ({
 
       const updatedTask = { done: !currentDone };
 
-      const response = await axios.patch(
-        `http://localhost:5001/api/tasks/${taskId}`,
-        updatedTask,
-        config,
-      );
+      const response = await api.patch(`/tasks/${taskId}`, updatedTask);
 
       console.log('Task done status toggled successfully:', response.data);
 

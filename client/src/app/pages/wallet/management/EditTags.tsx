@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { User, GraduationCap, Archive, Tag } from 'lucide-react';
 import { useCategoryContext } from '@/context/CategoryContext';
-import axios from 'axios';
+import { api } from '@/lib/api';
 import Modal from '@/components/ui/Modal';
 
 const EditTags = () => {
@@ -45,11 +45,7 @@ const EditTags = () => {
           },
         };
 
-        await axios.patch(
-          `http://localhost:5001/api/categories/${selectedCategory}`,
-          editedCategory,
-          config,
-        );
+        await api.patch(`/categories/${selectedCategory}`, editedCategory);
 
         setCategories((prev) => ({
           ...prev,
@@ -78,10 +74,7 @@ const EditTags = () => {
           },
         };
 
-        await axios.delete(
-          `http://localhost:5001/api/categories/${selectedCategory}`,
-          config,
-        );
+        await api.delete(`/categories/${selectedCategory}`);
 
         setCategories((prev) => {
           const updatedCategories = { ...prev };
@@ -111,11 +104,7 @@ const EditTags = () => {
     };
 
     try {
-      const response = await axios.post(
-        'http://localhost:5001/api/categories',
-        newCategory,
-        config,
-      );
+      const response = await api.post('/categories', newCategory);
       if (response.status === 201) {
         alert('Category added successfully!');
         setCategories((prev) => ({

@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/api';
 import {
   Select,
   SelectTrigger,
@@ -35,10 +35,7 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
       };
 
       try {
-        const categoryResponse = await axios.get(
-          'http://localhost:5001/api/categories',
-          config,
-        );
+        const categoryResponse = await api.get('/categories');
         const transformedCategories = categoryResponse.data.reduce(
           (
             acc: Record<string, { name: string; color?: string }>,
@@ -85,29 +82,17 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:5001/api/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await api.post('/tasks', requestBody);
 
-      if (response.ok) {
-        alert('Task added successfully!');
-        setFormData({
-          title: '',
-          categoryId: '',
-          startHHMM: '',
-          endHHMM: '',
-          notes: '',
-        });
-        refreshTaskList();
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to add task: ${errorData.message}`);
-      }
+      alert('Task added successfully!');
+      setFormData({
+        title: '',
+        categoryId: '',
+        startHHMM: '',
+        endHHMM: '',
+        notes: '',
+      });
+      refreshTaskList();
     } catch (error) {
       console.error('Error adding task:', error);
       alert('An error occurred while adding the task.');

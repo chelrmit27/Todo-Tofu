@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '../../../../lib/api';
 
 const PendingTasks = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -22,10 +22,7 @@ const PendingTasks = () => {
       };
 
       // Fetch categories
-      const categoryResponse = await axios.get(
-        'http://localhost:5001/api/categories',
-        config,
-      );
+      const categoryResponse = await api.get('/categories');
       const transformedCategories = categoryResponse.data.reduce(
         (
           acc: Record<string, { name: string; color?: string }>,
@@ -43,9 +40,8 @@ const PendingTasks = () => {
       yesterday.setDate(yesterday.getDate() - 1);
       const formattedDate = yesterday.toISOString().split('T')[0];
       //const formattedDate = '2025-09-09'
-      const taskResponse = await axios.get(
-        `http://localhost:5001/api/tasks?date=${formattedDate}&done=false`,
-        config,
+      const taskResponse = await api.get(
+        `/tasks?date=${formattedDate}&done=false`
       );
       const tasksWithColors = taskResponse.data.tasks.map((task: any) => {
         const category = categories[task.categoryId];
@@ -97,11 +93,7 @@ const PendingTasks = () => {
       const updatedTasks = tasks.filter((task) => task.selected);
       await Promise.all(
         updatedTasks.map((task) =>
-          axios.patch(
-            `http://localhost:5001/api/tasks/${task._id}`,
-            { done: true },
-            config,
-          ),
+          api.patch(`/tasks/${task._id}`, { done: true })
         ),
       );
 
@@ -141,14 +133,10 @@ const PendingTasks = () => {
             today.getDate(),
           );
 
-          return axios.patch(
-            `http://localhost:5001/api/tasks/${task._id}`,
-            {
-              start: start.toISOString(),
-              end: end.toISOString(),
-            },
-            config,
-          );
+          return api.patch(`/tasks/${task._id}`, {
+            start: start.toISOString(),
+            end: end.toISOString(),
+          });
         }),
       );
 

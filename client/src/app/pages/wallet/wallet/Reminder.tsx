@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { api } from '@/lib/api';
 import {
   Carousel,
   CarouselContent,
@@ -24,16 +24,10 @@ const Reminder = () => {
 
     const fetchData = async () => {
       try {
-        const tasksResponse = await axios.get(
-          'http://localhost:5001/api/tasks/today',
-          { headers },
-        );
+        const tasksResponse = await api.get('/tasks/today');
         setSpentHours(tasksResponse.data.spentHours || 0);
 
-        const eventsResponse = await axios.get(
-          'http://localhost:5001/api/events/today',
-          { headers },
-        );
+        const eventsResponse = await api.get('/events/today');
         console.log('Fetched events:', eventsResponse.data);
         console.log('Full events response:', eventsResponse);
         console.log('Response status:', eventsResponse.status);
