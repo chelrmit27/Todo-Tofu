@@ -9,6 +9,16 @@ import aggregationRoutes from './aggregationRoutes';
 
 const router = Router();
 
+// Health check endpoint
+router.get('/health', (_req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    vercel: !!process.env.VERCEL
+  });
+});
+
 router.use('/auth', authRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/events', eventRoutes);

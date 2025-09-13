@@ -5,7 +5,10 @@ import connectDB from './config/database';
 import routes from './routes';
 
 // Connect to Database
-connectDB();
+connectDB().catch((error) => {
+  console.error('Database connection failed:', error.message);
+  // Don't exit in serverless environment, just log the error
+});
 
 const app = express();
 
