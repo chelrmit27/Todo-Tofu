@@ -21,6 +21,7 @@ src/
 ## 🚀 Key Benefits
 
 ### ✅ **Solved Issues:**
+
 - **No more data inconsistency** - Single source of truth for all data
 - **No repeated API calls** - Data fetched once and shared across components
 - **No glitching/reloading** - State persists across navigation
@@ -31,53 +32,67 @@ src/
 ## 📦 Store Overview
 
 ### **1. Authentication Store (`useAuthStore`)**
+
 ```tsx
 const { user, isAuthenticated, login, logout, checkAuth } = useAuthStore();
 ```
+
 - Handles login/logout/registration
 - Persists auth state to localStorage
 - Auto-redirects on 401 errors
 
 ### **2. Wallet Store (`useWalletStore`)**
+
 ```tsx
-const { spentHours, budgetHours, remainingHours, fetchSpentHours } = useWalletStore();
+const { spentHours, budgetHours, remainingHours, fetchSpentHours } =
+  useWalletStore();
 ```
+
 - Manages time tracking data
 - Computes remaining hours automatically
 - Prevents duplicate API calls
 
 ### **3. Events Store (`useEventsStore`)**
+
 ```tsx
-const { events, createEvent, updateEvent, deleteEvent, isModalOpen } = useEventsStore();
+const { events, createEvent, updateEvent, deleteEvent, isModalOpen } =
+  useEventsStore();
 ```
+
 - Calendar events management
 - Modal state handling
 - CRUD operations with optimistic updates
 
 ### **4. Tasks Store (`useTasksStore`)**
+
 ```tsx
 const { tasks, createTask, updateTask, toggleTaskDone } = useTasksStore();
 ```
+
 - Task management and tracking
 - Today's tasks specifically
 - Task completion status
 
 ### **5. Categories Store (`useCategoriesStore`)**
+
 ```tsx
-const { categories, createCategory, updateCategory, deleteCategory } = useCategoriesStore();
+const { categories, createCategory, updateCategory, deleteCategory } =
+  useCategoriesStore();
 ```
+
 - Task category management
 - Color and name customization
 
 ## 🎯 Usage Examples
 
 ### **Basic Component Usage:**
+
 ```tsx
 import { useWalletStore } from '@/stores';
 
 const WalletComponent = () => {
   const { spentHours, isLoading, error } = useWalletStore();
-  
+
   return (
     <div>
       {isLoading ? 'Loading...' : `Spent: ${spentHours} hours`}
@@ -88,13 +103,14 @@ const WalletComponent = () => {
 ```
 
 ### **Data Fetching:**
+
 ```tsx
 import { useEffect } from 'react';
 import { useWalletStore } from '@/stores';
 
 const App = () => {
-  const fetchSpentHours = useWalletStore(state => state.fetchSpentHours);
-  
+  const fetchSpentHours = useWalletStore((state) => state.fetchSpentHours);
+
   useEffect(() => {
     fetchSpentHours(); // Auto-fetches and prevents duplicates
   }, [fetchSpentHours]);
@@ -102,12 +118,13 @@ const App = () => {
 ```
 
 ### **Form Handling:**
+
 ```tsx
 import { useEventsStore } from '@/stores';
 
 const EventForm = () => {
   const { newEvent, setNewEvent, createEvent } = useEventsStore();
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     await createEvent(newEvent); // Auto-updates store and closes modal
@@ -118,13 +135,15 @@ const EventForm = () => {
 ## 🔧 Integration Points
 
 ### **Calendar → Wallet Integration:**
+
 When events are created/updated, wallet data refreshes automatically:
+
 ```tsx
 import { useWalletUtils } from '@/stores';
 
 const EventComponent = () => {
   const { refreshWalletAfterTaskChange } = useWalletUtils();
-  
+
   const handleTaskUpdate = async () => {
     // Update task...
     await refreshWalletAfterTaskChange(); // Refresh wallet
@@ -133,22 +152,27 @@ const EventComponent = () => {
 ```
 
 ### **Error Handling:**
+
 All stores have consistent error handling:
+
 ```tsx
 const { error, clearError } = useEventsStore();
 
 // Display error with dismiss button
-{error && (
-  <div className="error-banner">
-    {error}
-    <button onClick={clearError}>×</button>
-  </div>
-)}
+{
+  error && (
+    <div className="error-banner">
+      {error}
+      <button onClick={clearError}>×</button>
+    </div>
+  );
+}
 ```
 
 ## 🛠️ Advanced Features
 
 ### **Optimistic Updates:**
+
 ```tsx
 const { updateTask } = useTasksStore();
 
@@ -157,6 +181,7 @@ await updateTask(taskId, newData);
 ```
 
 ### **Loading States:**
+
 ```tsx
 const { isLoading } = useWalletStore();
 
@@ -164,7 +189,9 @@ return isLoading ? <Spinner /> : <Content />;
 ```
 
 ### **Redux DevTools:**
+
 All stores integrate with Redux DevTools for debugging:
+
 - Time-travel debugging
 - Action history
 - State inspection
@@ -172,22 +199,26 @@ All stores integrate with Redux DevTools for debugging:
 ## 🎨 Updated Components
 
 ### **Calendar.tsx** - Now uses `useEventsStore`
+
 - Modal state managed by store
 - Event CRUD through store actions
 - No local state management
 
 ### **YourWallet.tsx** - Uses `useWalletStore`
+
 - Centralized data fetching
 - Consistent error handling
 - Automatic recalculation
 
 ### **Home.tsx** - Simplified
+
 - No state management
 - Clean component structure
 
 ## 🔮 Future Extensibility
 
 Adding new features is now trivial:
+
 ```tsx
 // Add to any store
 const useNewFeatureStore = create((set, get) => ({

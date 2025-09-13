@@ -19,9 +19,12 @@ export const useWalletUtils = () => {
   }, [refreshData]);
 
   // Optimistic update function (use before API call for instant UI feedback)
-  const optimisticUpdateSpentHours = useCallback((hours: number) => {
-    updateSpentHours(hours);
-  }, [updateSpentHours]);
+  const optimisticUpdateSpentHours = useCallback(
+    (hours: number) => {
+      updateSpentHours(hours);
+    },
+    [updateSpentHours],
+  );
 
   return {
     refreshWalletAfterTaskChange,

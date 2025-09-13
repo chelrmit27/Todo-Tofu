@@ -5,9 +5,7 @@ import { ThemeProvider } from '../context/ThemeContext';
 export default function Provider({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="todofu-ui-theme">
-      <AuthProvider>
-        {children}
-      </AuthProvider>
+      <AuthProvider>{children}</AuthProvider>
     </ThemeProvider>
   );
 }

@@ -39,7 +39,7 @@ const getUser = async (): Promise<AppUser | null> => {
   try {
     const token = localStorage.getItem('token');
     console.log('🔍 Checking token:', token ? 'exists' : 'missing');
-    
+
     if (!token) {
       console.log('❌ No token found');
       return null;
@@ -51,7 +51,7 @@ const getUser = async (): Promise<AppUser | null> => {
       const response = await fetch('http://localhost:5001/api/auth/validate', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -60,12 +60,12 @@ const getUser = async (): Promise<AppUser | null> => {
         console.log('🚨 Token validation failed, status:', response.status);
         throw new Error('Token validation failed');
       }
-      
+
       console.log('✅ Token validated successfully');
     } catch (error) {
       console.log('🚨 Token validation error:', error);
-      
-      // For development: if validation endpoint doesn't exist, 
+
+      // For development: if validation endpoint doesn't exist,
       // fallback to just checking if token and user data exist
       // Remove this fallback in production!
       console.log('⚠️  Falling back to local token check (development only)');
@@ -75,7 +75,7 @@ const getUser = async (): Promise<AppUser | null> => {
     if (userData) {
       const parsedUser = JSON.parse(userData);
       console.log('👤 Parsed user data:', parsedUser);
-      
+
       if (
         parsedUser &&
         parsedUser.id &&
@@ -116,21 +116,24 @@ const updateWeeklyAnalytics = async (): Promise<void> => {
     // Check if we've already updated today
     const lastUpdate = localStorage.getItem('lastAnalyticsUpdate');
     const today = new Date().toISOString().split('T')[0];
-    
+
     if (lastUpdate === today) {
       console.log('Weekly analytics already updated today');
       return;
     }
 
     console.log('Updating weekly analytics...');
-    
-    const response = await fetch('http://localhost:5001/api/aggregation/analytics/weekly/update', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+
+    const response = await fetch(
+      'http://localhost:5001/api/aggregation/analytics/weekly/update',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
 
     if (response.ok) {
       localStorage.setItem('lastAnalyticsUpdate', today);
@@ -172,11 +175,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const loadUser = async () => {
       console.log('🔄 Starting auth check, isLoading:', true);
       setIsLoading(true);
-      
+
       try {
         const userData = await getUser();
         console.log('👤 User data from getUser:', userData);
-        
+
         if (userData) {
           setUserState(userData);
           setIsAuth(true);
@@ -196,7 +199,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('✅ Auth check complete, isLoading:', false);
       }
     };
-    
+
     loadUser();
   }, []);
 

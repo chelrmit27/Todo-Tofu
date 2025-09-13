@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 import axios from 'axios';
 
 // Types
@@ -56,12 +63,15 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5001/api/tasks/today', {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.get(
+        'http://localhost:5001/api/tasks/today',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          timeout: 10000,
         },
-        timeout: 10000,
-      });
+      );
 
       console.log('WalletContext - API Response:', response.data);
 

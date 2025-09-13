@@ -15,10 +15,14 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   // Actions
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name?: string) => Promise<boolean>;
+  register: (
+    email: string,
+    password: string,
+    name?: string,
+  ) => Promise<boolean>;
   logout: () => void;
   checkAuth: () => Promise<void>;
   clearError: () => void;
@@ -46,10 +50,10 @@ const useAuthStore = create<AuthState>()(
             });
 
             const { token, user } = data;
-            
+
             // Store token in localStorage and API headers
             localStorage.setItem('token', token);
-            
+
             set(
               {
                 user,
@@ -59,12 +63,13 @@ const useAuthStore = create<AuthState>()(
                 error: null,
               },
               false,
-              'auth/loginSuccess'
+              'auth/loginSuccess',
             );
 
             return true;
           } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Login failed';
+            const errorMessage =
+              error.response?.data?.message || 'Login failed';
             console.error('Login failed', error);
             set(
               {
@@ -73,7 +78,7 @@ const useAuthStore = create<AuthState>()(
                 isAuthenticated: false,
               },
               false,
-              'auth/loginError'
+              'auth/loginError',
             );
             return false;
           }
@@ -90,7 +95,7 @@ const useAuthStore = create<AuthState>()(
             });
 
             const { token, user } = data;
-            
+
             // Store token in localStorage
             localStorage.setItem('token', token);
 
@@ -103,12 +108,13 @@ const useAuthStore = create<AuthState>()(
                 error: null,
               },
               false,
-              'auth/registerSuccess'
+              'auth/registerSuccess',
             );
 
             return true;
           } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Registration failed';
+            const errorMessage =
+              error.response?.data?.message || 'Registration failed';
             console.error('Registration failed', error);
             set(
               {
@@ -117,7 +123,7 @@ const useAuthStore = create<AuthState>()(
                 isAuthenticated: false,
               },
               false,
-              'auth/registerError'
+              'auth/registerError',
             );
             return false;
           }
@@ -133,7 +139,7 @@ const useAuthStore = create<AuthState>()(
               error: null,
             },
             false,
-            'auth/logout'
+            'auth/logout',
           );
         },
 
@@ -152,7 +158,7 @@ const useAuthStore = create<AuthState>()(
                 isLoading: false,
               },
               false,
-              'auth/checkSuccess'
+              'auth/checkSuccess',
             );
           } catch (error) {
             console.error('Auth check failed', error);
@@ -166,7 +172,7 @@ const useAuthStore = create<AuthState>()(
                 isLoading: false,
               },
               false,
-              'auth/checkError'
+              'auth/checkError',
             );
           }
         },
@@ -182,12 +188,12 @@ const useAuthStore = create<AuthState>()(
           user: state.user,
           isAuthenticated: state.isAuthenticated,
         }),
-      }
+      },
     ),
     {
       name: 'auth-store',
-    }
-  )
+    },
+  ),
 );
 
 export default useAuthStore;

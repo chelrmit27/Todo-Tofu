@@ -15,11 +15,16 @@ interface CategoriesState {
   isLoading: boolean;
   error: string | null;
   lastFetched: Date | null;
-  
+
   // Actions
   fetchCategories: () => Promise<void>;
-  createCategory: (categoryData: Omit<Category, '_id' | 'userId'>) => Promise<void>;
-  updateCategory: (id: string, categoryData: Partial<Category>) => Promise<void>;
+  createCategory: (
+    categoryData: Omit<Category, '_id' | 'userId'>,
+  ) => Promise<void>;
+  updateCategory: (
+    id: string,
+    categoryData: Partial<Category>,
+  ) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
   clearError: () => void;
 }
@@ -51,7 +56,7 @@ const useCategoriesStore = create<CategoriesState>()(
               error: null,
             },
             false,
-            'categories/fetchSuccess'
+            'categories/fetchSuccess',
           );
         } catch (error) {
           console.error('Failed loading categories', error);
@@ -61,40 +66,56 @@ const useCategoriesStore = create<CategoriesState>()(
               isLoading: false,
             },
             false,
-            'categories/fetchError'
+            'categories/fetchError',
           );
         }
       },
 
       createCategory: async (categoryData) => {
         try {
-          const { data } = await api.post<Category>('/categories', categoryData);
+          const { data } = await api.post<Category>(
+            '/categories',
+            categoryData,
+          );
           set(
             (state) => ({
               categories: [...state.categories, data],
             }),
             false,
-            'categories/createSuccess'
+            'categories/createSuccess',
           );
         } catch (error) {
           console.error('Failed to create category', error);
-          set({ error: 'Failed to create category' }, false, 'categories/createError');
+          set(
+            { error: 'Failed to create category' },
+            false,
+            'categories/createError',
+          );
         }
       },
 
       updateCategory: async (id, categoryData) => {
         try {
-          const { data } = await api.patch<Category>(`/categories/${id}`, categoryData);
+          const { data } = await api.patch<Category>(
+            `/categories/${id}`,
+            categoryData,
+          );
           set(
             (state) => ({
-              categories: state.categories.map((c) => (c._id === data._id ? data : c)),
+              categories: state.categories.map((c) =>
+                c._id === data._id ? data : c,
+              ),
             }),
             false,
-            'categories/updateSuccess'
+            'categories/updateSuccess',
           );
         } catch (error) {
           console.error('Failed to update category', error);
-          set({ error: 'Failed to update category' }, false, 'categories/updateError');
+          set(
+            { error: 'Failed to update category' },
+            false,
+            'categories/updateError',
+          );
         }
       },
 
@@ -106,11 +127,15 @@ const useCategoriesStore = create<CategoriesState>()(
               categories: state.categories.filter((c) => c._id !== id),
             }),
             false,
-            'categories/deleteSuccess'
+            'categories/deleteSuccess',
           );
         } catch (error) {
           console.error('Failed to delete category', error);
-          set({ error: 'Failed to delete category' }, false, 'categories/deleteError');
+          set(
+            { error: 'Failed to delete category' },
+            false,
+            'categories/deleteError',
+          );
         }
       },
 
@@ -120,8 +145,8 @@ const useCategoriesStore = create<CategoriesState>()(
     }),
     {
       name: 'categories-store',
-    }
-  )
+    },
+  ),
 );
 
 export default useCategoriesStore;

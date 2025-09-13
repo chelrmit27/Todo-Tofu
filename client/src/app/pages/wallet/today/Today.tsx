@@ -5,7 +5,9 @@ import axios from 'axios';
 
 const Today = () => {
   const [tasks, setTasks] = useState<any[]>([]);
-  const [categories, setCategories] = useState<Record<string, { name: string; color?: string }>>({});
+  const [categories, setCategories] = useState<
+    Record<string, { name: string; color?: string }>
+  >({});
 
   const fetchTasksAndCategories = async () => {
     try {
@@ -19,16 +21,28 @@ const Today = () => {
       };
 
       // Fetch categories
-      const categoryResponse = await axios.get('http://localhost:5001/api/categories', config);
-      const transformedCategories = categoryResponse.data.reduce((acc: Record<string, { name: string; color?: string }>, category: any) => {
-        acc[category._id] = { name: category.name, color: category.color };
-        return acc;
-      }, {});
+      const categoryResponse = await axios.get(
+        'http://localhost:5001/api/categories',
+        config,
+      );
+      const transformedCategories = categoryResponse.data.reduce(
+        (
+          acc: Record<string, { name: string; color?: string }>,
+          category: any,
+        ) => {
+          acc[category._id] = { name: category.name, color: category.color };
+          return acc;
+        },
+        {},
+      );
       setCategories(transformedCategories);
 
       // Fetch tasks
       const today = new Date().toISOString().split('T')[0];
-      const taskResponse = await axios.get(`http://localhost:5001/api/tasks?date=${today}`, config);
+      const taskResponse = await axios.get(
+        `http://localhost:5001/api/tasks?date=${today}`,
+        config,
+      );
       const tasksWithColors = taskResponse.data.tasks.map((task: any) => {
         const category = transformedCategories[task.categoryId];
 
@@ -72,7 +86,11 @@ const Today = () => {
 
       <NewTask refreshTaskList={refreshTaskList} />
 
-      <TaskList tasks={tasks} categories={categories} refreshTaskList={refreshTaskList} />
+      <TaskList
+        tasks={tasks}
+        categories={categories}
+        refreshTaskList={refreshTaskList}
+      />
     </div>
   );
 };

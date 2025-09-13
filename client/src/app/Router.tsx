@@ -24,19 +24,36 @@ export default function AppRouter() {
       {/* Public Routes - No authentication required */}
       <Route path="/" element={<Landing />} />
       <Route path="/landing" element={<Landing />} />
-      
+
       {/* Auth Routes - Only for non-authenticated users */}
-      <Route path="/auth/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
-      <Route path="/auth/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
+      <Route
+        path="/auth/login"
+        element={
+          <PublicOnlyRoute>
+            <Login />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/auth/register"
+        element={
+          <PublicOnlyRoute>
+            <Register />
+          </PublicOnlyRoute>
+        }
+      />
 
       {/* Protected App Routes - Authentication required */}
-      <Route path="/app/*" element={
-        <ProtectedRoute>
-          <Layout />
-        </ProtectedRoute>
-      }>
+      <Route
+        path="/app/*"
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="wallet" replace />} />
-        
+
         {/* Wallet-related routes with TaskTab */}
         <Route path="wallet" element={<Home />}>
           <Route index element={<Wallet />} />
@@ -50,13 +67,20 @@ export default function AppRouter() {
         <Route path="edit-tags" element={<Home />}>
           <Route index element={<EditTags />} />
         </Route>
-        
+
         {/* Standalone routes (no TaskTab) */}
         <Route path="calendar" element={<Calendar />} />
-        <Route path="analytics" element={<CategoryProvider><Analytics /></CategoryProvider>} />
+        <Route
+          path="analytics"
+          element={
+            <CategoryProvider>
+              <Analytics />
+            </CategoryProvider>
+          }
+        />
         <Route path="logout" element={<Logout />} />
       </Route>
-      
+
       {/* Catch-all route for undefined paths - only catch truly invalid routes */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -1,8 +1,4 @@
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import type {
   DateSelectArg,
@@ -20,7 +16,7 @@ import { useEventsStore } from '@/stores';
 
 const Calendar = () => {
   const calendarRef = useRef<FullCalendar>(null);
-  
+
   // Get state and actions from Zustand store
   const {
     events,
@@ -57,33 +53,41 @@ const Calendar = () => {
       const to = toDateStringUTC(endDatePlusOne);
 
       console.log('📅 Current view range:', from, 'to', to);
-      console.log('📅 FullCalendar provided range:', toDateStringUTC(startDate), 'to', toDateStringUTC(endDate));
+      console.log(
+        '📅 FullCalendar provided range:',
+        toDateStringUTC(startDate),
+        'to',
+        toDateStringUTC(endDate),
+      );
       await fetchEvents(from, to);
     },
     [fetchEvents],
   );
 
   // Handle calendar date selection
-  const handleSelect = useCallback((selection: DateSelectArg) => {
-    const toDatetimeLocal = (date: Date): string => {
-      const pad = (n: number) => n.toString().padStart(2, '0');
-      const yyyy = date.getFullYear();
-      const mm = pad(date.getMonth() + 1);
-      const dd = pad(date.getDate());
-      const hh = pad(date.getHours());
-      const mi = pad(date.getMinutes());
-      return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
-    };
+  const handleSelect = useCallback(
+    (selection: DateSelectArg) => {
+      const toDatetimeLocal = (date: Date): string => {
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        const yyyy = date.getFullYear();
+        const mm = pad(date.getMonth() + 1);
+        const dd = pad(date.getDate());
+        const hh = pad(date.getHours());
+        const mi = pad(date.getMinutes());
+        return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+      };
 
-    // Set new event data and open modal
-    setNewEvent({
-      title: '',
-      start: toDatetimeLocal(selection.start),
-      end: toDatetimeLocal(selection.end ?? selection.start),
-      allDay: selection.allDay,
-    });
-    openModal(); // Open in create mode
-  }, [setNewEvent, openModal]);
+      // Set new event data and open modal
+      setNewEvent({
+        title: '',
+        start: toDatetimeLocal(selection.start),
+        end: toDatetimeLocal(selection.end ?? selection.start),
+        allDay: selection.allDay,
+      });
+      openModal(); // Open in create mode
+    },
+    [setNewEvent, openModal],
+  );
 
   // Handle form submission
   const handleModalSubmit = async () => {
@@ -108,20 +112,22 @@ const Calendar = () => {
       } else {
         await createEvent(payload);
         console.log('✅ Event created successfully');
-        
+
         // Force refetch events from the database for the current view
         if (calendarRef.current) {
           const calendarApi = calendarRef.current.getApi();
           const currentView = calendarApi.view;
           const startDate = new Date(currentView.activeStart);
           const endDate = new Date(currentView.activeEnd);
-          
+
           // Add one extra day to end date to ensure we fetch all events
-          const endDatePlusOne = new Date(endDate.getTime() + 24 * 60 * 60 * 1000);
-          
+          const endDatePlusOne = new Date(
+            endDate.getTime() + 24 * 60 * 60 * 1000,
+          );
+
           const from = startDate.toISOString().split('T')[0];
           const to = endDatePlusOne.toISOString().split('T')[0];
-          
+
           console.log('🔄 Refetching events for date range:', from, 'to', to);
           await fetchEvents(from, to);
         }
@@ -132,21 +138,24 @@ const Calendar = () => {
   };
 
   // Handle event drag/resize
-  const handleEventChange = useCallback(async (change: EventChangeArg) => {
-    const ev = change.event;
-    try {
-      const payload = {
-        start: ev.start?.toISOString(),
-        end: ev.end?.toISOString(),
-        allDay: ev.allDay,
-      };
-      const id = ev.extendedProps._id || ev.id;
-      await updateEvent(id, payload);
-    } catch (e) {
-      console.error('Update (drag/resize) failed', e);
-      change.revert();
-    }
-  }, [updateEvent]);
+  const handleEventChange = useCallback(
+    async (change: EventChangeArg) => {
+      const ev = change.event;
+      try {
+        const payload = {
+          start: ev.start?.toISOString(),
+          end: ev.end?.toISOString(),
+          allDay: ev.allDay,
+        };
+        const id = ev.extendedProps._id || ev.id;
+        await updateEvent(id, payload);
+      } catch (e) {
+        console.error('Update (drag/resize) failed', e);
+        change.revert();
+      }
+    },
+    [updateEvent],
+  );
 
   // Handle event click
   const handleEventClick = useCallback(
@@ -163,7 +172,7 @@ const Calendar = () => {
   // Convert events for FullCalendar
   const fcEvents = useMemo(() => {
     console.log('🔍 Raw events from store:', events);
-    
+
     if (!Array.isArray(events)) {
       console.log('⚠️ Events is not an array:', events);
       return [];
@@ -201,7 +210,7 @@ const Calendar = () => {
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 flex justify-between items-center">
             <span>{error}</span>
-            <button 
+            <button
               onClick={clearError}
               className="text-red-500 hover:text-red-700 font-bold"
             >
@@ -209,7 +218,7 @@ const Calendar = () => {
             </button>
           </div>
         )}
-        
+
         <div className="rounded-xl bg-[hsl(var(--page-bg))]">
           <FullCalendar
             ref={calendarRef as React.RefObject<FullCalendar>}
@@ -292,7 +301,7 @@ const Calendar = () => {
           />
         </div>
       </main>
-      
+
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <form
@@ -310,9 +319,7 @@ const Calendar = () => {
               <input
                 type="text"
                 value={newEvent.title}
-                onChange={(e) =>
-                  setNewEvent({ title: e.target.value })
-                }
+                onChange={(e) => setNewEvent({ title: e.target.value })}
                 required
                 className="w-full p-2 border rounded input-black-text"
               />
@@ -322,9 +329,7 @@ const Calendar = () => {
               <input
                 type="datetime-local"
                 value={formatDateTimeLocalInput(newEvent.start)}
-                onChange={(e) =>
-                  setNewEvent({ start: e.target.value })
-                }
+                onChange={(e) => setNewEvent({ start: e.target.value })}
                 required
                 className="w-full p-2 border rounded input-black-text"
               />
@@ -334,9 +339,7 @@ const Calendar = () => {
               <input
                 type="datetime-local"
                 value={formatDateTimeLocalInput(newEvent.end)}
-                onChange={(e) =>
-                  setNewEvent({ end: e.target.value })
-                }
+                onChange={(e) => setNewEvent({ end: e.target.value })}
                 required
                 className="w-full p-2 border rounded input-black-text"
               />

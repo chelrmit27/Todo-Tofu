@@ -13,9 +13,7 @@ const app = express();
 // Enable Cross-Origin Resource Sharing
 app.use(
   cors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? true // Allow all origins in production for now
-      : ['http://localhost:5173', 'http://localhost:4173'],
+    origin: ['http://localhost:5173', 'http://localhost:4173'],
     credentials: true,
   }),
 );

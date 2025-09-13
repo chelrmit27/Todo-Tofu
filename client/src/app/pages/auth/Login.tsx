@@ -36,7 +36,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   useEffect(() => {
     const originalTheme = theme;
     setTheme('light');
-    
+
     // Cleanup: restore original theme when component unmounts
     return () => {
       setTheme(originalTheme);
@@ -150,7 +150,9 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
           {/* Header */}
           <div className="mb-8 ">
-            <h1 className="text-4xl font-semibold mb-2 text-foreground">Welcome Back</h1>
+            <h1 className="text-4xl font-semibold mb-2 text-foreground">
+              Welcome Back
+            </h1>
             <p className="text-muted-foreground text-base font-light">
               Please enter your account details
             </p>
@@ -159,7 +161,9 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Error Message */}
             {error && (
-              <div className="px-4 py-3 rounded-lg text-sm bg-destructive/10 text-destructive border border-destructive/20">{error}</div>
+              <div className="px-4 py-3 rounded-lg text-sm bg-destructive/10 text-destructive border border-destructive/20">
+                {error}
+              </div>
             )}
 
             {/* Username Field */}

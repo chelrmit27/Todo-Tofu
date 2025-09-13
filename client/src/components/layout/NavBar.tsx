@@ -11,19 +11,22 @@ import { ModeToggle } from '@/components/ui/mode-toggle';
 
 export const NavBar: React.FC = () => {
   const location = useLocation();
-  
+
   const getIconClassName = (path: string) => {
     let isActive = false;
-    
+
     // Special handling for home icon - it should be active for wallet routes
     if (path === '/') {
-      isActive = location.pathname === '/app/wallet' || location.pathname.startsWith('/app/wallet') || 
-                 location.pathname === '/app/today' || location.pathname === '/app/yesterday' || 
-                 location.pathname === '/app/edit-tags';
+      isActive =
+        location.pathname === '/app/wallet' ||
+        location.pathname.startsWith('/app/wallet') ||
+        location.pathname === '/app/today' ||
+        location.pathname === '/app/yesterday' ||
+        location.pathname === '/app/edit-tags';
     } else {
       isActive = location.pathname === path;
     }
-    
+
     return `w-6 h-6 ${isActive ? 'text-[#FFE200] dark:text-[#FFE200]' : 'text-foreground hover:text-[#FFE200] dark:hover:text-[#FFE200]'}`;
   };
 

@@ -1,6 +1,12 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import axios from 'axios';
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select';
 
 const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
   const [formData, setFormData] = useState({
@@ -10,7 +16,9 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
     endHHMM: '',
     notes: '',
   });
-  const [categories, setCategories] = useState<Record<string, { name: string; color?: string }>>({});
+  const [categories, setCategories] = useState<
+    Record<string, { name: string; color?: string }>
+  >({});
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,13 +35,19 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
       };
 
       try {
-        const categoryResponse = await axios.get('http://localhost:5001/api/categories', config);
+        const categoryResponse = await axios.get(
+          'http://localhost:5001/api/categories',
+          config,
+        );
         const transformedCategories = categoryResponse.data.reduce(
-          (acc: Record<string, { name: string; color?: string }>, category: any) => {
+          (
+            acc: Record<string, { name: string; color?: string }>,
+            category: any,
+          ) => {
             acc[category._id] = { name: category.name, color: category.color };
             return acc;
           },
-          {}
+          {},
         );
         setCategories(transformedCategories);
       } catch (error) {
@@ -45,7 +59,9 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
     fetchCategories();
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -80,7 +96,13 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
 
       if (response.ok) {
         alert('Task added successfully!');
-        setFormData({ title: '', categoryId: '', startHHMM: '', endHHMM: '', notes: '' });
+        setFormData({
+          title: '',
+          categoryId: '',
+          startHHMM: '',
+          endHHMM: '',
+          notes: '',
+        });
         refreshTaskList();
       } else {
         const errorData = await response.json();
@@ -143,7 +165,12 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
                   </SelectTrigger>
                   <SelectContent>
                     {Object.entries(categories).map(([id, { name, color }]) => (
-                      <SelectItem key={id} value={id} className="text-sm" style={{ color }}>
+                      <SelectItem
+                        key={id}
+                        value={id}
+                        className="text-sm"
+                        style={{ color }}
+                      >
                         {name}
                       </SelectItem>
                     ))}
@@ -195,8 +222,8 @@ const NewTask = ({ refreshTaskList }: { refreshTaskList: () => void }) => {
           </div>
 
           <div className="flex flex-row justify-end pt-3">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="bg-[hsl(var(--button-primary))] px-8 py-2 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105 hover:-translate-y-0.5 active:scale-95 hover:shadow-lg text-white font-medium"
             >
               Add

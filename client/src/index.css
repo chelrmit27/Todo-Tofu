@@ -29,7 +29,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    
+
     /* Custom app colors */
     --task-tab-bg: 0 0% 100%; /* white for light mode */
     --page-bg: 270 29% 96%; /* #F5F3F7 for light mode */
@@ -79,7 +79,7 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    
+
     /* Custom app colors for dark mode */
     --task-tab-bg: 0 0% 24%; /* #3D3D3D - task tab background */
     --page-bg: 45 9% 16%; /* #292927 - main page background */
@@ -118,69 +118,69 @@
   .new-task-input-bg {
     background-color: hsl(var(--new-task-input-bg));
   }
-  
+
   .new-task-form-bg {
     background-color: hsl(var(--new-task-bg));
   }
-  
+
   /* Make both input text and placeholder text black for new task inputs */
   .new-task-input-bg {
     color: #000000 !important;
   }
-  
+
   .new-task-input-bg::placeholder {
     color: #000000 !important;
     opacity: 0.7;
   }
-  
+
   .new-task-input-bg::-webkit-input-placeholder {
     color: #000000 !important;
     opacity: 0.7;
   }
-  
+
   .new-task-input-bg::-moz-placeholder {
     color: #000000 !important;
     opacity: 0.7;
   }
-  
+
   .new-task-input-bg:-ms-input-placeholder {
     color: #000000 !important;
     opacity: 0.7;
   }
-  
+
   /* Make Select component text black too */
   .new-task-input-bg .select-trigger,
-  .new-task-input-bg[role="combobox"] {
+  .new-task-input-bg[role='combobox'] {
     color: #000000 !important;
   }
-  
+
   /* Make modal input text and placeholder black */
-  .bg-card input[type="text"],
-  .bg-card input[type="datetime-local"],
-  .bg-card input[type="time"],
-  .bg-card input[type="date"],
+  .bg-card input[type='text'],
+  .bg-card input[type='datetime-local'],
+  .bg-card input[type='time'],
+  .bg-card input[type='date'],
   .bg-card textarea {
     color: #000000 !important;
   }
-  
+
   .bg-card input::placeholder,
   .bg-card textarea::placeholder {
     color: #000000 !important;
     opacity: 0.7;
   }
-  
+
   .bg-card input::-webkit-input-placeholder,
   .bg-card textarea::-webkit-input-placeholder {
     color: #000000 !important;
     opacity: 0.7;
   }
-  
+
   .bg-card input::-moz-placeholder,
   .bg-card textarea::-moz-placeholder {
     color: #000000 !important;
     opacity: 0.7;
   }
-  
+
   .bg-card input:-ms-input-placeholder,
   .bg-card textarea:-ms-input-placeholder {
     color: #000000 !important;

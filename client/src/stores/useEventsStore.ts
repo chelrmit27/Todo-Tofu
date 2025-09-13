@@ -19,7 +19,7 @@ interface EventsState {
   isLoading: boolean;
   error: string | null;
   lastFetched: Date | null;
-  
+
   // Modal state
   isModalOpen: boolean;
   editEvent: ApiEvent | null;
@@ -29,13 +29,13 @@ interface EventsState {
     end: string;
     allDay: boolean;
   };
-  
+
   // Actions
   fetchEvents: (fromISO: string, toISO: string) => Promise<void>;
   createEvent: (eventData: Omit<ApiEvent, '_id'>) => Promise<void>;
   updateEvent: (id: string, eventData: Partial<ApiEvent>) => Promise<void>;
   deleteEvent: (id: string) => Promise<void>;
-  
+
   // Modal actions
   openModal: (event?: ApiEvent) => void;
   closeModal: () => void;
@@ -51,7 +51,7 @@ const useEventsStore = create<EventsState>()(
       isLoading: false,
       error: null,
       lastFetched: null,
-      
+
       // Modal state
       isModalOpen: false,
       editEvent: null,
@@ -92,7 +92,7 @@ const useEventsStore = create<EventsState>()(
               error: null,
             },
             false,
-            'events/fetchSuccess'
+            'events/fetchSuccess',
           );
         } catch (error) {
           console.error('Failed loading events', error);
@@ -102,7 +102,7 @@ const useEventsStore = create<EventsState>()(
               isLoading: false,
             },
             false,
-            'events/fetchError'
+            'events/fetchError',
           );
         }
       },
@@ -112,7 +112,7 @@ const useEventsStore = create<EventsState>()(
           console.log('📤 Creating event on server:', eventData);
           const { data } = await api.post<ApiEvent>('/events', eventData);
           console.log('📥 Received event from server:', data);
-          
+
           // Just close the modal - don't add to local state
           // The calendar will refetch events from the database
           set(
@@ -122,9 +122,9 @@ const useEventsStore = create<EventsState>()(
               newEvent: { title: '', start: '', end: '', allDay: false },
             },
             false,
-            'events/createSuccess'
+            'events/createSuccess',
           );
-          
+
           console.log('✅ Event created, modal closed');
         } catch (error) {
           console.error('Failed to create event', error);
@@ -134,7 +134,10 @@ const useEventsStore = create<EventsState>()(
 
       updateEvent: async (id, eventData) => {
         try {
-          const { data } = await api.patch<ApiEvent>(`/events/${id}`, eventData);
+          const { data } = await api.patch<ApiEvent>(
+            `/events/${id}`,
+            eventData,
+          );
           set(
             (state) => ({
               events: state.events.map((e) => (e._id === data._id ? data : e)),
@@ -142,7 +145,7 @@ const useEventsStore = create<EventsState>()(
               editEvent: null,
             }),
             false,
-            'events/updateSuccess'
+            'events/updateSuccess',
           );
         } catch (error) {
           console.error('Failed to update event', error);
@@ -160,7 +163,7 @@ const useEventsStore = create<EventsState>()(
               editEvent: null,
             }),
             false,
-            'events/deleteSuccess'
+            'events/deleteSuccess',
           );
         } catch (error) {
           console.error('Failed to delete event', error);
@@ -195,7 +198,7 @@ const useEventsStore = create<EventsState>()(
               },
             },
             false,
-            'events/openEditModal'
+            'events/openEditModal',
           );
         } else {
           // Create mode - don't reset newEvent, keep existing values
@@ -205,7 +208,7 @@ const useEventsStore = create<EventsState>()(
               editEvent: null,
             },
             false,
-            'events/openCreateModal'
+            'events/openCreateModal',
           );
         }
       },
@@ -218,7 +221,7 @@ const useEventsStore = create<EventsState>()(
             newEvent: { title: '', start: '', end: '', allDay: false },
           },
           false,
-          'events/closeModal'
+          'events/closeModal',
         );
       },
 
@@ -228,7 +231,7 @@ const useEventsStore = create<EventsState>()(
             newEvent: { ...state.newEvent, ...eventUpdate },
           }),
           false,
-          'events/setNewEvent'
+          'events/setNewEvent',
         );
       },
 
@@ -238,8 +241,8 @@ const useEventsStore = create<EventsState>()(
     }),
     {
       name: 'events-store',
-    }
-  )
+    },
+  ),
 );
 
 export default useEventsStore;

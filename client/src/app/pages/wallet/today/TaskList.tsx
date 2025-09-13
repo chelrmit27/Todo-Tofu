@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
 import Modal from '@/components/ui/Modal'; // Assuming Modal is a reusable component
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select';
 import axios from 'axios';
 
-const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; categories: Record<string, { name: string; color?: string }> ; refreshTaskList: () => void }) => {
+const TaskList = ({
+  tasks,
+  categories,
+  refreshTaskList,
+}: {
+  tasks: any[];
+  categories: Record<string, { name: string; color?: string }>;
+  refreshTaskList: () => void;
+}) => {
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editedTask, setEditedTask] = useState<any | null>(null);
 
@@ -12,7 +26,9 @@ const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; catego
     setEditedTask({ ...task });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setEditedTask((prev: any) => ({ ...prev, [name]: value }));
   };
@@ -32,8 +48,12 @@ const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; catego
       const datePart = editedTask.date.split('T')[0];
 
       // Combine date and time, then convert to UTC ISO strings
-      const startUTC = new Date(`${datePart}T${editedTask.startHHMM}:00`).toISOString();
-      const endUTC = new Date(`${datePart}T${editedTask.endHHMM}:00`).toISOString();
+      const startUTC = new Date(
+        `${datePart}T${editedTask.startHHMM}:00`,
+      ).toISOString();
+      const endUTC = new Date(
+        `${datePart}T${editedTask.endHHMM}:00`,
+      ).toISOString();
 
       const updatedTask = {
         ...editedTask,
@@ -53,7 +73,7 @@ const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; catego
       const response = await axios.patch(
         `http://localhost:5001/api/tasks/${editingTaskId}`,
         updatedTask,
-        config
+        config,
       );
 
       console.log('Task updated successfully:', response.data);
@@ -93,7 +113,7 @@ const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; catego
       const response = await axios.patch(
         `http://localhost:5001/api/tasks/${taskId}`,
         updatedTask,
-        config
+        config,
       );
 
       console.log('Task done status toggled successfully:', response.data);
@@ -145,7 +165,9 @@ const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; catego
             <h3 className="text-xl font-semibold mb-4">Edit Task</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Title
+                </label>
                 <input
                   type="text"
                   name="title"
@@ -156,30 +178,44 @@ const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; catego
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Category
+                </label>
                 <div className="relative">
                   <Select
                     value={editedTask?.categoryId || ''}
                     onValueChange={(value) => {
-                      setEditedTask((prev: any) => ({ ...prev, categoryId: value }));
+                      setEditedTask((prev: any) => ({
+                        ...prev,
+                        categoryId: value,
+                      }));
                     }}
                   >
                     <SelectTrigger className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(categories).map(([id, { name, color }]) => (
-                        <SelectItem key={id} value={id} className="text-sm" style={{ color }}>
-                          {name}
-                        </SelectItem>
-                      ))}
+                      {Object.entries(categories).map(
+                        ([id, { name, color }]) => (
+                          <SelectItem
+                            key={id}
+                            value={id}
+                            className="text-sm"
+                            style={{ color }}
+                          >
+                            {name}
+                          </SelectItem>
+                        ),
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Start Time</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Start Time
+                </label>
                 <input
                   type="time"
                   name="startHHMM"
@@ -190,7 +226,9 @@ const TaskList = ({ tasks, categories, refreshTaskList }: { tasks: any[]; catego
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">End Time</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  End Time
+                </label>
                 <input
                   type="time"
                   name="endHHMM"

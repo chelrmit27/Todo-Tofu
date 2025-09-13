@@ -16,11 +16,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, onClose }) => {
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
       onClick={handleBackdropClick}
     >
-      <div className="bg-card text-card-foreground rounded-lg shadow-lg p-4 w-96">{children}</div>
+      <div className="bg-card text-card-foreground rounded-lg shadow-lg p-4 w-96">
+        {children}
+      </div>
     </div>
   );
 };

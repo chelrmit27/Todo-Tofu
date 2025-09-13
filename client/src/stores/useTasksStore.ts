@@ -20,7 +20,7 @@ interface TasksState {
   isLoading: boolean;
   error: string | null;
   lastFetched: Date | null;
-  
+
   // Actions
   fetchTasks: (date: string, done?: boolean) => Promise<void>;
   fetchTodayTasks: () => Promise<void>;
@@ -64,7 +64,7 @@ const useTasksStore = create<TasksState>()(
               error: null,
             },
             false,
-            'tasks/fetchSuccess'
+            'tasks/fetchSuccess',
           );
         } catch (error) {
           console.error('Failed loading tasks', error);
@@ -74,7 +74,7 @@ const useTasksStore = create<TasksState>()(
               isLoading: false,
             },
             false,
-            'tasks/fetchError'
+            'tasks/fetchError',
           );
         }
       },
@@ -96,7 +96,7 @@ const useTasksStore = create<TasksState>()(
               error: null,
             },
             false,
-            'tasks/fetchTodaySuccess'
+            'tasks/fetchTodaySuccess',
           );
         } catch (error) {
           console.error('Failed loading today tasks', error);
@@ -106,7 +106,7 @@ const useTasksStore = create<TasksState>()(
               isLoading: false,
             },
             false,
-            'tasks/fetchTodayError'
+            'tasks/fetchTodayError',
           );
         }
       },
@@ -120,7 +120,7 @@ const useTasksStore = create<TasksState>()(
               todayTasks: [...state.todayTasks, data],
             }),
             false,
-            'tasks/createSuccess'
+            'tasks/createSuccess',
           );
         } catch (error) {
           console.error('Failed to create task', error);
@@ -134,10 +134,12 @@ const useTasksStore = create<TasksState>()(
           set(
             (state) => ({
               tasks: state.tasks.map((t) => (t._id === data._id ? data : t)),
-              todayTasks: state.todayTasks.map((t) => (t._id === data._id ? data : t)),
+              todayTasks: state.todayTasks.map((t) =>
+                t._id === data._id ? data : t,
+              ),
             }),
             false,
-            'tasks/updateSuccess'
+            'tasks/updateSuccess',
           );
         } catch (error) {
           console.error('Failed to update task', error);
@@ -154,7 +156,7 @@ const useTasksStore = create<TasksState>()(
               todayTasks: state.todayTasks.filter((t) => t._id !== id),
             }),
             false,
-            'tasks/deleteSuccess'
+            'tasks/deleteSuccess',
           );
         } catch (error) {
           console.error('Failed to delete task', error);
@@ -164,27 +166,34 @@ const useTasksStore = create<TasksState>()(
 
       toggleTaskDone: async (id) => {
         const state = get();
-        const task = state.tasks.find((t) => t._id === id) || 
-                     state.todayTasks.find((t) => t._id === id);
-        
+        const task =
+          state.tasks.find((t) => t._id === id) ||
+          state.todayTasks.find((t) => t._id === id);
+
         if (!task) return;
 
         try {
           const { data } = await api.patch<Task>(`/tasks/${id}`, {
             done: !task.done,
           });
-          
+
           set(
             (state) => ({
               tasks: state.tasks.map((t) => (t._id === data._id ? data : t)),
-              todayTasks: state.todayTasks.map((t) => (t._id === data._id ? data : t)),
+              todayTasks: state.todayTasks.map((t) =>
+                t._id === data._id ? data : t,
+              ),
             }),
             false,
-            'tasks/toggleDoneSuccess'
+            'tasks/toggleDoneSuccess',
           );
         } catch (error) {
           console.error('Failed to toggle task', error);
-          set({ error: 'Failed to toggle task' }, false, 'tasks/toggleDoneError');
+          set(
+            { error: 'Failed to toggle task' },
+            false,
+            'tasks/toggleDoneError',
+          );
         }
       },
 
@@ -194,8 +203,8 @@ const useTasksStore = create<TasksState>()(
     }),
     {
       name: 'tasks-store',
-    }
-  )
+    },
+  ),
 );
 
 export default useTasksStore;

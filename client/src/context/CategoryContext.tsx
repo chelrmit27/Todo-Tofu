@@ -12,17 +12,23 @@ interface CategoryContextType {
   setCategories: React.Dispatch<React.SetStateAction<Record<string, Category>>>;
 }
 
-const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
+const CategoryContext = createContext<CategoryContextType | undefined>(
+  undefined,
+);
 
 export const useCategoryContext = () => {
   const context = useContext(CategoryContext);
   if (!context) {
-    throw new Error('useCategoryContext must be used within a CategoryProvider');
+    throw new Error(
+      'useCategoryContext must be used within a CategoryProvider',
+    );
   }
   return context;
 };
 
-export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [categories, setCategories] = useState<Record<string, Category>>({});
 
   useEffect(() => {
@@ -40,13 +46,16 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       };
 
       try {
-        const categoryResponse = await axios.get('http://localhost:5001/api/categories', config);
+        const categoryResponse = await axios.get(
+          'http://localhost:5001/api/categories',
+          config,
+        );
         const transformedCategories = categoryResponse.data.reduce(
           (acc: Record<string, Category>, category: any) => {
             acc[category._id] = { name: category.name, color: category.color };
             return acc;
           },
-          {}
+          {},
         );
         setCategories(transformedCategories);
       } catch (error) {

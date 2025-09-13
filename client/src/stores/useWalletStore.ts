@@ -11,7 +11,7 @@ interface WalletState {
   lastUpdated: Date | null;
   // Computed values
   remainingHours: number;
-  
+
   // Actions
   fetchSpentHours: () => Promise<void>;
   updateSpentHours: (hours: number) => void;
@@ -28,7 +28,7 @@ const useWalletStore = create<WalletState>()(
       isLoading: false,
       error: null,
       lastUpdated: null,
-      
+
       // Computed value
       get remainingHours() {
         const state = get();
@@ -38,7 +38,7 @@ const useWalletStore = create<WalletState>()(
       // Actions
       fetchSpentHours: async () => {
         const state = get();
-        
+
         // Prevent multiple simultaneous calls
         if (state.isLoading) return;
 
@@ -59,7 +59,7 @@ const useWalletStore = create<WalletState>()(
                 error: null,
               },
               false,
-              'wallet/fetchSuccess'
+              'wallet/fetchSuccess',
             );
           } else {
             console.warn('Invalid spentHours received:', hours);
@@ -70,7 +70,7 @@ const useWalletStore = create<WalletState>()(
                 error: null,
               },
               false,
-              'wallet/fetchInvalidData'
+              'wallet/fetchInvalidData',
             );
           }
         } catch (error) {
@@ -81,7 +81,7 @@ const useWalletStore = create<WalletState>()(
               isLoading: false,
             },
             false,
-            'wallet/fetchError'
+            'wallet/fetchError',
           );
         }
       },
@@ -94,7 +94,7 @@ const useWalletStore = create<WalletState>()(
               lastUpdated: new Date(),
             },
             false,
-            'wallet/updateSpentHours'
+            'wallet/updateSpentHours',
           );
         }
       },
@@ -109,8 +109,8 @@ const useWalletStore = create<WalletState>()(
     }),
     {
       name: 'wallet-store', // For Redux DevTools
-    }
-  )
+    },
+  ),
 );
 
 export default useWalletStore;

@@ -1,16 +1,16 @@
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "@/context/ThemeContext"
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
 
 export function ModeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark")
+    if (theme === 'light') {
+      setTheme('dark');
     } else {
-      setTheme("light")
+      setTheme('light');
     }
-  }
+  };
 
   return (
     <button
@@ -21,5 +21,5 @@ export function ModeToggle() {
       <Moon className="absolute h-[1.5rem] w-[1.5rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
       <span className="sr-only">Toggle theme</span>
     </button>
-  )
+  );
 }

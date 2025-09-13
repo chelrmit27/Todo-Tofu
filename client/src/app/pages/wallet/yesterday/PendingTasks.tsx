@@ -4,7 +4,9 @@ import axios from 'axios';
 
 const PendingTasks = () => {
   const [tasks, setTasks] = useState<any[]>([]);
-  const [categories, setCategories] = useState<Record<string, { name: string; color?: string }>>({});
+  const [categories, setCategories] = useState<
+    Record<string, { name: string; color?: string }>
+  >({});
   const [loading, setLoading] = useState(true);
 
   const fetchCategoriesAndTasks = async () => {
@@ -20,11 +22,20 @@ const PendingTasks = () => {
       };
 
       // Fetch categories
-      const categoryResponse = await axios.get('http://localhost:5001/api/categories', config);
-      const transformedCategories = categoryResponse.data.reduce((acc: Record<string, { name: string; color?: string }>, category: any) => {
-        acc[category._id] = { name: category.name, color: category.color };
-        return acc;
-      }, {});
+      const categoryResponse = await axios.get(
+        'http://localhost:5001/api/categories',
+        config,
+      );
+      const transformedCategories = categoryResponse.data.reduce(
+        (
+          acc: Record<string, { name: string; color?: string }>,
+          category: any,
+        ) => {
+          acc[category._id] = { name: category.name, color: category.color };
+          return acc;
+        },
+        {},
+      );
       setCategories(transformedCategories);
 
       // Fetch tasks
@@ -32,7 +43,10 @@ const PendingTasks = () => {
       yesterday.setDate(yesterday.getDate() - 1);
       const formattedDate = yesterday.toISOString().split('T')[0];
       //const formattedDate = '2025-09-09'
-      const taskResponse = await axios.get(`http://localhost:5001/api/tasks?date=${formattedDate}&done=false`, config);
+      const taskResponse = await axios.get(
+        `http://localhost:5001/api/tasks?date=${formattedDate}&done=false`,
+        config,
+      );
       const tasksWithColors = taskResponse.data.tasks.map((task: any) => {
         const category = categories[task.categoryId];
 
@@ -86,9 +100,9 @@ const PendingTasks = () => {
           axios.patch(
             `http://localhost:5001/api/tasks/${task._id}`,
             { done: true },
-            config
-          )
-        )
+            config,
+          ),
+        ),
       );
 
       setTasks((prevTasks) => prevTasks.filter((task) => !task.selected));
@@ -116,8 +130,16 @@ const PendingTasks = () => {
           const end = new Date(task.end);
 
           // Update only the date part to today's date
-          start.setFullYear(today.getFullYear(), today.getMonth(), today.getDate());
-          end.setFullYear(today.getFullYear(), today.getMonth(), today.getDate());
+          start.setFullYear(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+          );
+          end.setFullYear(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+          );
 
           return axios.patch(
             `http://localhost:5001/api/tasks/${task._id}`,
@@ -125,9 +147,9 @@ const PendingTasks = () => {
               start: start.toISOString(),
               end: end.toISOString(),
             },
-            config
+            config,
           );
-        })
+        }),
       );
 
       // Reload tasks after updates
@@ -146,7 +168,7 @@ const PendingTasks = () => {
     );
   }
 
-  if (tasks.length === 0){
+  if (tasks.length === 0) {
     return (
       <div>
         <h2 className="text-2xl font-semibold mb-6">Pending Tasks</h2>
@@ -157,7 +179,7 @@ const PendingTasks = () => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -178,18 +200,17 @@ const PendingTasks = () => {
                   onChange={(e) => {
                     setTasks((prevTasks) =>
                       prevTasks.map((t) =>
-                        t._id === task._id ? { ...t, selected: e.target.checked } : t
-                      )
+                        t._id === task._id
+                          ? { ...t, selected: e.target.checked }
+                          : t,
+                      ),
                     );
                   }}
                 />
                 {task.title}
               </div>
 
-              <div
-                className="col-span-3"
-                style={{ color: task.color }}
-              >
+              <div className="col-span-3" style={{ color: task.color }}>
                 {categories[task.categoryId]?.name || 'Unknown Category'}
               </div>
 
