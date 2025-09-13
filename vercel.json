@@ -5,14 +5,17 @@
       "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist",
+        "installCommand": "cd .. && pnpm install --no-frozen-lockfile && cd client && pnpm install --no-frozen-lockfile",
+        "buildCommand": "pnpm build"
       }
     },
     {
-      "src": "server/src/server.ts",
+      "src": "server/package.json",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["server/dist/**"]
+        "installCommand": "cd .. && pnpm install --no-frozen-lockfile && cd server && pnpm install --no-frozen-lockfile",
+        "buildCommand": "pnpm build"
       }
     }
   ],
@@ -25,7 +28,5 @@
       "src": "/(.*)",
       "dest": "/client/dist/$1"
     }
-  ],
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "pnpm run build"
+  ]
 }
