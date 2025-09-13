@@ -1,28 +1,11 @@
 {
-  "version": 2,
   "installCommand": "pnpm install --no-frozen-lockfile",
   "buildCommand": "pnpm run build",
-  "functions": {
-    "api/*.cjs": {
-      "runtime": "@vercel/node"
-    }
-  },
-  "routes": [
+  "outputDirectory": "client/dist",
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.cjs"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/client/dist/assets/$1"
-    },
-    {
-      "src": "/(.*)\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
-      "dest": "/client/dist/$1.$2"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/client/dist/index.html"
+      "source": "/api/(.*)",
+      "destination": "/api/index.cjs"
     }
   ]
 }
