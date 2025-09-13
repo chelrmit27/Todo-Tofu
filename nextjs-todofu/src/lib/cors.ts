@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 // CORS headers for API routes
 export const corsHeaders = {
   'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production' 
-    ? 'https://your-domain.vercel.app' // Update this when you deploy
+    ? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://todofu.vercel.app')
     : 'http://localhost:3000',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-auth-token',
