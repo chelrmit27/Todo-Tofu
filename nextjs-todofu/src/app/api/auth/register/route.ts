@@ -5,7 +5,7 @@ import { corsResponse, handlePreflight } from '@/lib/cors';
 import { UserModel, IUser } from '@/models/UserModel';
 import { UserServices } from '@/services/UserServices';
 import { signJWT } from '@/utils/SignHelper';
-import { userRegistrationSchema } from '@/middleware/validationHelper';
+import { userRegistrationSchema } from '@/lib/validation';
 
 interface TokenPayload {
   userId: string;
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       username: username.trim(),
       email: email.trim().toLowerCase(),
       passwordHash: hashedPassword,
-      name: name.trim(),
+      name: name?.trim(),
       profilePicture,
       preferences: {
         timezone: 'Asia/Ho_Chi_Minh',

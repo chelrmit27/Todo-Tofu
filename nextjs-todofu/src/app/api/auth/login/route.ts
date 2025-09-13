@@ -4,7 +4,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import { corsResponse, handlePreflight } from '@/lib/cors';
 import { UserServices } from '@/services/UserServices';
 import { signJWT } from '@/utils/SignHelper';
-import { loginSchema } from '@/middleware/validationHelper';
+import { loginSchema } from '@/lib/validation';
 
 interface TokenPayload {
   userId: string;

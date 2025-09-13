@@ -3,6 +3,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import Image from 'next/image';
 
 interface Task {
   _id: string;
@@ -155,7 +156,7 @@ const PendingTasks = () => {
         <div>
           No pending tasks. Well done.
           <div className="flex flex-row justify-center">
-            <img src="/tofu/Sleepy.png" alt="Sleepy Tofu" className="w-72 h-72 object-cover" />
+            <Image src="/tofu/Sleepy.png" alt="Sleepy Tofu" width={288} height={288} className="object-cover" />
           </div>
         </div>
       </div>
