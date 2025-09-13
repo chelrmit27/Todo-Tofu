@@ -1,0 +1,288 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    
+    /* Custom app colors */
+    --task-tab-bg: 0 0% 100%; /* white for light mode */
+    --page-bg: 270 29% 96%; /* #F5F3F7 for light mode */
+    --wallet-border: 210 10% 79%; /* #D0CCCC equivalent */
+    --wallet-fill: 0 0% 100%; /* white for light mode */
+    --tag-bg: 0 0% 96.1%; /* light gray for tags */
+    --navbar-bg: 250 100% 87%; /* #C0B0FF - navbar background */
+    --primary-green: 166 56% 29%; /* #2D967C - primary green */
+    --primary-yellow: 48 66% 51%; /* #D5C338 - primary yellow */
+    --primary-purple: 248 96% 81%; /* #B29FFC - primary purple */
+    --tofu-tag-bg: 248 96% 81% / 0.3; /* #B29FFC with 30% opacity */
+    --tofu-tag-text: 252 67% 59%; /* #6D48FB - tofu tag text */
+    --category-tag-bg: 166 56% 29% / 0.3; /* #2D967C with 30% opacity */
+    --category-tag-text: 161 75% 26%; /* #117C61 - category tag text */
+    --new-task-bg: 208 78% 73% / 0.5; /* #88B9EA with 50% opacity */
+    --new-task-input-bg: 0 0% 100%; /* white for input fields in light mode */
+    --button-primary: 217 76% 56% / 0.6; /* light blue button */
+    --slider-track: 210 10% 91%; /* #E6E7E9 - slider track */
+    --pending-task-bg: 248 89% 91%; /* #E0D9FE - pending task */
+    --overdue-task-bg: 348 86% 54% / 0.5; /* #DC143C with 50% opacity */
+    --calendar-today-overlay: 0 0% 85%; /* light gray overlay for today cells */
+    --calendar-grid-line: 0 0% 90%; /* light grid lines */
+  }
+
+  .dark {
+    --background: 45 9% 16%; /* #292927 */
+    --foreground: 0 0% 98%;
+    --card: 0 0% 25%; /* #292927 */
+    --card-foreground: 0 0% 98%;
+    --popover: 45 9% 16%; /* #292927 */
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 45 9% 16%; /* #292927 */
+    --secondary: 45 9% 18%; /* slightly lighter than #292927 */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 45 9% 18%; /* slightly lighter than #292927 */
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 45 9% 18%; /* slightly lighter than #292927 */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%; /* lighter border for better visibility */
+    --input: 45 9% 18%; /* slightly lighter for inputs */
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    
+    /* Custom app colors for dark mode */
+    --task-tab-bg: 0 0% 24%; /* #3D3D3D - task tab background */
+    --page-bg: 45 9% 16%; /* #292927 - main page background */
+    --wallet-border: 0 0% 60%; /* lighter border for better visibility */
+    --wallet-fill: 0 0% 25%; /* #292927 - same as page background */
+    --tag-bg: 0 0% 25%; /* medium gray for tags */
+    --navbar-bg: 260 40% 50%; /* darker purple for navbar */
+    --primary-green: 166 56% 45%; /* lighter green for better contrast */
+    --primary-yellow: 48 66% 65%; /* lighter yellow for better contrast */
+    --primary-purple: 248 96% 85%; /* lighter purple for better contrast */
+    --tofu-tag-bg: 284 96% 70% / 0.15; /* slightly more transparent in dark */
+    --tofu-tag-text: 282 79% 64%; /* lighter purple text */
+    --category-tag-bg: 166 56% 29% / 0.2; /* slightly more transparent */
+    --category-tag-text: 161 75% 50%; /* lighter green text */
+    --new-task-bg: 224 63% 30% / 0.7; /* darker form background */
+    --new-task-input-bg: 208 61% 90% / 0.8; /* light blue input background */
+    --button-primary: 208 61% 73%; /* light blue button */
+    --slider-track: 0 0% 30%; /* slider track similar to task-tab-bg */
+    --pending-task-bg: 260 100% 60% / 0.6; /* pending task bg slightly lighter than #292927 */
+    --overdue-task-bg: 348 86% 42% / 0.6; /* less opacity for overdue */
+    --calendar-today-overlay: 0 0% 40%; /* darker overlay for today cells in dark mode */
+    --calendar-grid-line: 0 0% 35%; /* darker grid lines for dark mode */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .new-task-input-bg {
+    background-color: hsl(var(--new-task-input-bg));
+  }
+  
+  .new-task-form-bg {
+    background-color: hsl(var(--new-task-bg));
+  }
+  
+  /* Make both input text and placeholder text black for new task inputs */
+  .new-task-input-bg {
+    color: #000000 !important;
+  }
+  
+  .new-task-input-bg::placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+  
+  .new-task-input-bg::-webkit-input-placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+  
+  .new-task-input-bg::-moz-placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+  
+  .new-task-input-bg:-ms-input-placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+  
+  /* Make Select component text black too */
+  .new-task-input-bg .select-trigger,
+  .new-task-input-bg[role="combobox"] {
+    color: #000000 !important;
+  }
+  
+  /* Make modal input text and placeholder black */
+  .bg-card input[type="text"],
+  .bg-card input[type="datetime-local"],
+  .bg-card input[type="time"],
+  .bg-card input[type="date"],
+  .bg-card textarea {
+    color: #000000 !important;
+  }
+  
+  .bg-card input::placeholder,
+  .bg-card textarea::placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+  
+  .bg-card input::-webkit-input-placeholder,
+  .bg-card textarea::-webkit-input-placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+  
+  .bg-card input::-moz-placeholder,
+  .bg-card textarea::-moz-placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+  
+  .bg-card input:-ms-input-placeholder,
+  .bg-card textarea:-ms-input-placeholder {
+    color: #000000 !important;
+    opacity: 0.7;
+  }
+}
+
+/* ------------ BACKGROUND COLOR ------------ */
+/* Remove default yellow from today cells */
+.fc .fc-day-today,
+.fc .fc-timegrid-col.fc-day-today,
+.fc .fc-daygrid-day.fc-day-today,
+.fc .fc-col-header-cell.fc-day-today {
+  background-color: transparent !important; /* override yellow */
+  position: relative;
+  z-index: 1;
+}
+
+/* Custom overlay for all today cells */
+.fc .fc-day-today::before,
+.fc .fc-timegrid-col.fc-day-today::before,
+.fc .fc-daygrid-day.fc-day-today::before,
+.fc .fc-col-header-cell.fc-day-today::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: hsl(var(--calendar-today-overlay));
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* This targets the horizontal red line for current time */
+.fc .fc-timegrid-now-indicator-line {
+  border-color: red; /* Default is red, you can change it */
+  border-width: 1px; /* Make it thicker if desired */
+}
+
+/* ------------ CURRENT TIME LINE ------------ */
+/* Optional: current time "dot" on the timeline */
+.fc .fc-timegrid-now-indicator-arrow {
+  background-color: red;
+}
+
+/* Add left circle */
+.fc .fc-timegrid-now-indicator-line::before,
+.fc .fc-timegrid-now-indicator-line::after {
+  content: '';
+  position: absolute;
+  top: -4px; /* center vertically */
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+/* Left end */
+.fc .fc-timegrid-now-indicator-line::before {
+  left: -1px;
+}
+
+/* Right end */
+.fc .fc-timegrid-now-indicator-line::after {
+  right: -1px;
+}
+
+/* ------------ GRIDLINE CUSTOMIZATION ------------ */
+
+/* Remove borders from day headers */
+.fc .fc-timegrid-header {
+  border: none;
+}
+
+.fc .fc-timegrid-header table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.fc .fc-timegrid-header th,
+.fc .fc-col-header-cell {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+/* Remove borders from time axis */
+.fc .fc-timegrid-axis,
+.fc .fc-timegrid-slot-label {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+/* Main grid body: keep time slot lines only */
+.fc .fc-timegrid-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: none;
+}
+
+.fc .fc-timegrid-slot {
+  border-top: 1px solid hsl(var(--calendar-grid-line));
+}
+
+.fc .fc-timegrid-body td {
+  border-left: 1px solid hsl(var(--calendar-grid-line));
+}
