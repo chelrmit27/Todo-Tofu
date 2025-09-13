@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --parallel dev",
-    "build": "pnpm --parallel build",
+    "build": "pnpm install && cd client && pnpm install && cd ../server && pnpm install && cd .. && pnpm --parallel build",
     "start": "pnpm --parallel start",
     "preview": "pnpm --parallel preview",
     "lint": "eslint . --ext .ts,.tsx",
