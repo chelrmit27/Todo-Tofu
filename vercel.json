@@ -26,6 +26,6 @@
       "dest": "/client/dist/$1"
     }
   ],
-  "installCommand": "pnpm install && cd client && pnpm install && cd ../server && pnpm install",
-  "buildCommand": "cd client && pnpm build && cd ../server && pnpm build"
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "pnpm run build"
 }
