@@ -134,7 +134,8 @@ export const getWeeklyTrends = async (req: Request, res: Response) => {
     }
 
     const daily: { date: string; minutes: number }[] = [];
-    const byCategory: { categoryId: string; name: string; minutes: number }[] = [];
+    const byCategory: { categoryId: string; name: string; minutes: number }[] =
+      [];
     let streak = 0;
     let currentStreak = 0;
     let totalSpentMinutes = 0;
@@ -157,10 +158,15 @@ export const getWeeklyTrends = async (req: Request, res: Response) => {
         end: { $gt: startUTC },
       });
 
-      console.log(`Day ${i} (${dayStartString}): Found ${tasks.length} tasks, ${events.length} events`);
+      console.log(
+        `Day ${i} (${dayStartString}): Found ${tasks.length} tasks, ${events.length} events`,
+      );
 
       // Calculate task and event minutes
-      const taskMinutes = tasks.reduce((sum, t) => sum + (t.durationMin || 0), 0);
+      const taskMinutes = tasks.reduce(
+        (sum, t) => sum + (t.durationMin || 0),
+        0,
+      );
       const eventMinutes = events.reduce((sum, ev) => {
         const c = clampToDay(ev.start, ev.end, startUTC, endUTC);
         return sum + (c ? minutesBetween(c.start, c.end) : 0);
@@ -180,7 +186,14 @@ export const getWeeklyTrends = async (req: Request, res: Response) => {
         const categoryId = task.categoryId?.toString() || 'uncategorized';
         const categoryName = task.categoryName || 'Uncategorized';
 
-        console.log('Task categoryId:', categoryId, 'categoryName:', categoryName, 'durationMin:', task.durationMin);
+        console.log(
+          'Task categoryId:',
+          categoryId,
+          'categoryName:',
+          categoryName,
+          'durationMin:',
+          task.durationMin,
+        );
 
         const category = byCategory.find((c) => c.categoryId === categoryId);
         if (category) {
@@ -210,7 +223,8 @@ export const getWeeklyTrends = async (req: Request, res: Response) => {
     }
 
     streak = Math.max(streak, currentStreak);
-    const focusRatio = daysWithData > 0 ? totalSpentMinutes / daysWithData / 60 : 0; // Average productive hours per day
+    const focusRatio =
+      daysWithData > 0 ? totalSpentMinutes / daysWithData / 60 : 0; // Average productive hours per day
 
     // Calculate average time spent per category
     const averageByCategory = byCategory.map((category) => ({
@@ -226,7 +240,9 @@ export const getWeeklyTrends = async (req: Request, res: Response) => {
     console.log('Focus Ratio:', focusRatio);
     console.log('Streak:', streak);
 
-    res.status(200).json({ byCategory: averageByCategory, daily, focusRatio, streak });
+    res
+      .status(200)
+      .json({ byCategory: averageByCategory, daily, focusRatio, streak });
   } catch (error) {
     console.error('Error fetching weekly trends:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -240,7 +256,10 @@ interface CategoryAggregation {
   minutes: number;
 }
 
-export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Response) => {
+export const updateWeeklyAnalytics = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     const userId = req.user?.userId;
     if (!userId) {
@@ -248,18 +267,19 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
     }
 
     const { date } = req.query;
-    
+
     // Use provided date or default to today
-    const today = date && typeof date === 'string' ? new Date(date) : new Date();
+    const today =
+      date && typeof date === 'string' ? new Date(date) : new Date();
     console.log('Testing with date:', today);
     const todayString = today.toISOString().split('T')[0];
 
     // Call getDaySummary internally to get today's data
-    const mockReq = { 
+    const mockReq = {
       query: { date: todayString },
-      user: req.user 
+      user: req.user,
     } as unknown as AuthenticatedRequest;
-    
+
     let daySummaryData: any = null;
     const mockDayRes = {
       status: (code: number) => ({
@@ -267,8 +287,8 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
           if (code === 200) {
             daySummaryData = data;
           }
-        }
-      })
+        },
+      }),
     } as unknown as Response;
 
     await getDaySummary(mockReq, mockDayRes);
@@ -283,7 +303,7 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
     // Call getWeeklyTrends internally to get weekly data
     const mockWeekReq = {
       query: { start: weekStartString },
-      user: req.user
+      user: req.user,
     } as unknown as Request & { user?: any };
 
     let weeklyTrendsData: any = null;
@@ -293,14 +313,17 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
           if (code === 200) {
             weeklyTrendsData = data;
           }
-        }
-      })
+        },
+      }),
     } as unknown as Response;
 
     await getWeeklyTrends(mockWeekReq, mockWeekRes);
 
     // Fetch or create the weekly analytics document
-    let analytics = await AnalyticsModel.findOne({ userId, weekStart: weekStartString });
+    let analytics = await AnalyticsModel.findOne({
+      userId,
+      weekStart: weekStartString,
+    });
     if (!analytics) {
       analytics = new AnalyticsModel({
         userId,
@@ -316,10 +339,13 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
     // Update analytics with the data from the functions
     if (daySummaryData && weeklyTrendsData) {
       const { startUTC, endUTC } = dayBoundsUTC(todayString);
-      
+
       // Get tasks for category aggregation
-      const tasks = await TaskModel.find({ userId, date: { $gte: startUTC, $lt: endUTC } });
-      
+      const tasks = await TaskModel.find({
+        userId,
+        date: { $gte: startUTC, $lt: endUTC },
+      });
+
       // Update daily analytics for today
       const existingDay = analytics.daily.find((d) => d.date === todayString);
       if (existingDay) {
@@ -342,7 +368,11 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
             if (category) {
               category.minutes += task.durationMin || 0;
             } else {
-              acc.push({ categoryId, name: categoryName, minutes: task.durationMin || 0 });
+              acc.push({
+                categoryId,
+                name: categoryName,
+                minutes: task.durationMin || 0,
+              });
             }
             return acc;
           }, []),
@@ -350,7 +380,10 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
       }
 
       // Update weekly totals using data from getWeeklyTrends
-      analytics.totalMinutes = weeklyTrendsData.daily.reduce((sum: number, day: any) => sum + day.minutes, 0);
+      analytics.totalMinutes = weeklyTrendsData.daily.reduce(
+        (sum: number, day: any) => sum + day.minutes,
+        0,
+      );
       analytics.byCategory = weeklyTrendsData.byCategory.map((cat: any) => ({
         categoryId: cat.categoryId,
         name: cat.name,
@@ -368,14 +401,14 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
 
     await analytics.save();
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Weekly analytics updated successfully',
       analytics: {
         totalMinutes: analytics.totalMinutes,
         byCategory: analytics.byCategory,
         focusRatio: analytics.focusRatio,
         streak: analytics.streak,
-      }
+      },
     });
   } catch (error) {
     console.error('Error updating weekly analytics:', error);
@@ -383,7 +416,10 @@ export const updateWeeklyAnalytics = async (req: AuthenticatedRequest, res: Resp
   }
 };
 
-export const getWeeklyAnalytics = async (req: AuthenticatedRequest, res: Response) => {
+export const getWeeklyAnalytics = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     const userId = req.user?.userId;
     if (!userId) {
@@ -413,7 +449,10 @@ export const getWeeklyAnalytics = async (req: AuthenticatedRequest, res: Respons
     console.log('Getting weekly analytics for week starting:', weekStartString);
 
     // Find existing analytics document
-    let analytics = await AnalyticsModel.findOne({ userId, weekStart: weekStartString });
+    let analytics = await AnalyticsModel.findOne({
+      userId,
+      weekStart: weekStartString,
+    });
 
     if (!analytics) {
       console.log('No analytics found, creating default analytics');
@@ -433,7 +472,7 @@ export const getWeeklyAnalytics = async (req: AuthenticatedRequest, res: Respons
     // Calculate additional metrics for frontend
     const totalSpentMinutes = analytics.totalMinutes || 0;
     const averageProductiveHours = totalSpentMinutes / 60 / 7; // Average hours per day over 7 days
-    const totalRestMinutes = (7 * 24 * 60) - totalSpentMinutes; // Total rest minutes for the week
+    const totalRestMinutes = 7 * 24 * 60 - totalSpentMinutes; // Total rest minutes for the week
 
     console.log('Returning analytics:', {
       totalMinutes: analytics.totalMinutes,
@@ -457,4 +496,3 @@ export const getWeeklyAnalytics = async (req: AuthenticatedRequest, res: Respons
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-

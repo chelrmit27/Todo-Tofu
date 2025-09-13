@@ -57,7 +57,11 @@ export const getTasks = async (req: AuthenticatedRequest, res: Response) => {
     console.log('getTasks called with date:', date, 'and done:', done);
     console.log('User ID:', userId);
 
-    if (!date || typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    if (
+      !date ||
+      typeof date !== 'string' ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(date)
+    ) {
       return res.status(400).json({
         message: 'Invalid date parameter. Expected format: YYYY-MM-DD',
       });
@@ -264,7 +268,10 @@ export const deleteTask = async (req: AuthenticatedRequest, res: Response) => {
   }
 };
 
-export const getTodayTasks = async (req: AuthenticatedRequest, res: Response) => {
+export const getTodayTasks = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     const userId = req.user?.userId;
     const today = new Date().toISOString().split('T')[0];
@@ -285,6 +292,6 @@ export const getTodayTasks = async (req: AuthenticatedRequest, res: Response) =>
     const spentHours = Math.round(spentMinutes / 60);
     res.json({ spentHours });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching today\'s tasks', error });
+    res.status(500).json({ message: "Error fetching today's tasks", error });
   }
 };

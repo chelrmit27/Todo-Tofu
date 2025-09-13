@@ -187,7 +187,10 @@ function dayBoundsUTC(localDate: string) {
   return { startUTC, endUTC };
 }
 
-export const getTodayEvents = async (req: AuthenticatedRequest, res: Response) => {
+export const getTodayEvents = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     const userId = req.user?.userId;
     const today = new Date().toISOString().split('T')[0];
@@ -200,6 +203,6 @@ export const getTodayEvents = async (req: AuthenticatedRequest, res: Response) =
 
     res.json(events);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching today\'s events', error });
+    res.status(500).json({ message: "Error fetching today's events", error });
   }
 };
