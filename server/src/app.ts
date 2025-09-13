@@ -23,18 +23,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // This is where we mount our API routes
-app.use('/api', routes);
+// In serverless (Vercel), routes come without the /api prefix
+if (process.env.VERCEL) {
+  app.use('/', routes);
+} else {
+  app.use('/api', routes);
+}
 
 // Serve static files from the client build in production
-if (process.env.NODE_ENV === 'production') {
-  // Serve static files from client/dist
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+  // Only serve static files when not on Vercel (Vercel handles static files)
   app.use(express.static(path.join(__dirname, '../../client/dist')));
 
   // Handle client-side routing by serving index.html for non-API routes
   app.get('*', (_req, res) => {
     res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
   });
-} else {
+} else if (!process.env.VERCEL) {
   app.get('/', (_req, res) => {
     res.send('API is running...');
   });
