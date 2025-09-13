@@ -1,5 +1,4 @@
 {
-  "buildCommand": "cd nextjs-todofu && pnpm install && pnpm run build",
-  "installCommand": "echo 'Dependencies installed in build command'",
-  "outputDirectory": "nextjs-todofu/.next"
+  "framework": "nextjs",
+  "rootDirectory": "nextjs-todofu"
 }
