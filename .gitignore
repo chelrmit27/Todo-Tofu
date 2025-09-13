@@ -185,3 +185,4 @@ public/uploads/
 client/dist/
 server/dist/
 server/uploads/
+.vercel

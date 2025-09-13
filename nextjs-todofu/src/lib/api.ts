@@ -3,15 +3,7 @@
 import axios from 'axios';
 
 // Determine API base URL based on environment
-const getApiBaseUrl = () => {
-  // For development, use the original Express server
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:5001/api';
-  }
-  
-  // In production/deployment, use Next.js API routes
-  return '/api';
-};
+const getApiBaseUrl = () => '/api'
 
 // Create centralized API instance
 export const api = axios.create({
