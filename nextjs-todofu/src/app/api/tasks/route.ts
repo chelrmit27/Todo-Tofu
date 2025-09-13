@@ -4,6 +4,9 @@ import { corsResponse, handlePreflight } from '@/lib/cors';
 import { getAuthUser } from '@/lib/auth';
 import { TaskModel } from '@/models/TaskModel';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export async function OPTIONS() {
   return handlePreflight();
 }

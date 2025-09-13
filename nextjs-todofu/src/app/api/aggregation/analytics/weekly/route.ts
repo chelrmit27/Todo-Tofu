@@ -5,6 +5,10 @@ import { connectToDatabase } from '@/lib/mongodb';
 import { TaskModel } from '@/models/TaskModel';
 import { CategoryModel } from '@/models/CategoryModel';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 interface AnalyticsData {
   weekStart: string;
   totalMinutes: number;
