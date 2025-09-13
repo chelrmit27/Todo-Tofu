@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create centralized API instance
 export const api = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  baseURL: import.meta.env.PROD ? '/api' : 'http://localhost:5001/api',
   withCredentials: true,
   timeout: 10000,
 });
