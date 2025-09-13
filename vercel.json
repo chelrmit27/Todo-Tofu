@@ -1,7 +1,5 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
   "buildCommand": "cd nextjs-todofu && pnpm install && pnpm run build",
-  "outputDirectory": "nextjs-todofu/.next",
-  "installCommand": "echo 'Skip root install, handled in buildCommand'"
+  "installCommand": "echo 'Dependencies installed in build command'",
+  "outputDirectory": "nextjs-todofu/.next"
 }
