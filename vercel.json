@@ -1,15 +1,7 @@
 {
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "pnpm run build",
-  "outputDirectory": "client/dist",
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.cjs"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "cd nextjs-todofu && pnpm install && pnpm run build",
+  "outputDirectory": "nextjs-todofu/.next",
+  "installCommand": "echo 'Skip root install, handled in buildCommand'"
 }

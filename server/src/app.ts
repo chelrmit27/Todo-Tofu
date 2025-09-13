@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: process.env.NODE_ENV === 'production' && process.env.VERCEL
       ? true  // Allow all origins in Vercel production for now
-      : ['http://localhost:5173', 'http://localhost:4173'],
+      : ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:3000'],
     credentials: true,
   }),
 );
@@ -38,11 +38,11 @@ if (process.env.VERCEL) {
 // Serve static files from the client build in production
 if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
   // Only serve static files when not on Vercel (Vercel handles static files)
-  app.use(express.static(path.join(__dirname, '../../client/dist')));
+  app.use(express.static(path.join(__dirname, '../../nextjs-todofu/out')));
 
   // Handle client-side routing by serving index.html for non-API routes
   app.get('*', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+    res.sendFile(path.join(__dirname, '../../nextjs-todofu/out/index.html'));
   });
 } else if (!process.env.VERCEL) {
   app.get('/', (_req, res) => {

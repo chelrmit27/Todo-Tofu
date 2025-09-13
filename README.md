@@ -1,19 +1,39 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/YHSq4TPZ)
+# ToDoTofu - Full Stack Task Management App
 
-# To-Do App – Preliminary Assignment Submission
-
-⚠️ Please complete **all sections marked with the ✍️ icon** — these are required for your submission.
-
-👀 Please Check ASSIGNMENT.md file in this repository for assignment requirements.
+A comprehensive task management application built with Next.js frontend and Express.js backend.
 
 ## 🚀 Project Setup & Usage
 
-**How to install and run your project:**  
-✍️  
-Example (replace with your actual steps)
+**Installation and running:**
 
-- `npm install`
-- `npm start`
+### Backend Setup
+```bash
+cd server
+pnpm install
+pnpm dev
+```
+
+### Frontend Setup
+```bash
+cd nextjs-todofu
+pnpm install
+pnpm dev
+```
+
+### Running Both (from root)
+```bash
+pnpm install  # Installs dependencies for both server and client
+pnpm dev      # Runs both server and client in parallel
+```
+
+## � Project Structure
+
+```
+├── nextjs-todofu/          # Next.js frontend application
+├── server/                 # Express.js backend API
+├── package.json           # Root package.json for parallel development
+└── README.md
+```
 
 ## 🔗 Deployed Web URL or APK file
 
