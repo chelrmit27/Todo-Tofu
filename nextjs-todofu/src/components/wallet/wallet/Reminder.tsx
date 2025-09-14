@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { api } from '@/lib/api';
 import {
@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import useWalletStore from '@/stores/useWalletStore';
 
 interface Event {
   title: string;
@@ -17,70 +18,26 @@ interface Event {
   end: string;
 }
 
-interface ApiError {
-  response?: {
-    data: unknown;
-    status: number;
-  };
-}
-
 const Reminder = () => {
-  const [spentHours, setSpentHours] = useState(0);
-  const [events, setEvents] = useState<Event[]>([]);
+  const {
+    spentHours,
+    fetchSpentHours,
+  } = useWalletStore();
+  const [events, setEvents] = React.useState<Event[]>([]);
 
-  console.log('Reminder component rendered');
-  console.log('Current state - spentHours:', spentHours, 'events:', events);
-
-  useEffect(() => {
-    console.log('useEffect triggered - fetching data');
-    const fetchData = async () => {
+  React.useEffect(() => {
+    fetchSpentHours();
+    // Fetch events for today
+    const fetchEvents = async () => {
       try {
-        const currentDate = new Date();
-        // Use local date instead of UTC to avoid timezone issues
-        const year = currentDate.getFullYear();
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const todayDateString = `${year}-${month}-${day}`;
-        
-        console.log('🔔 REMINDER COMPONENT: Current timestamp:', Date.now());
-        console.log('🔔 REMINDER COMPONENT: Loading data for LOCAL date:', todayDateString);
-        console.log('🔔 REMINDER COMPONENT: Current date object:', currentDate);
-        console.log('🔔 REMINDER COMPONENT: Local year/month/day:', year, month, day);
-        console.log('🔔 REMINDER COMPONENT: ISO string full:', currentDate.toISOString());
-        console.log('🔔 REMINDER COMPONENT: Timezone offset:', currentDate.getTimezoneOffset());
-        console.log('🔔 REMINDER COMPONENT: Will call API: /tasks?date=' + todayDateString);
-        
-        console.log('Making API call to /tasks/today');
-        const tasksResponse = await api.get('/tasks/today');
-        console.log('Tasks response:', tasksResponse);
-        console.log('Tasks response data:', tasksResponse.data);
-        console.log('Setting spentHours to:', tasksResponse.data.spentHours || 0);
-        setSpentHours(tasksResponse.data.spentHours || 0);
-
-        console.log('Making API call to /tasks?date=' + todayDateString);
-        const eventsResponse = await api.get(`/tasks?date=${todayDateString}&_t=${Date.now()}`);
-        console.log('🔔 REMINDER: Full API URL called:', `/tasks?date=${todayDateString}&_t=${Date.now()}`);
-        console.log('Events response:', eventsResponse);
-        console.log('Events response data:', eventsResponse.data);
-        
-        // Extract events from the tasks API response
-        const eventsData = eventsResponse.data?.events || [];
-        console.log('Events data type:', typeof eventsData);
-        console.log('Is events data array?', Array.isArray(eventsData));
-        console.log('Setting events to:', eventsData);
-        setEvents(eventsData);
+        const eventsResponse = await api.get('/events/today');
+        setEvents(eventsResponse.data?.events || []);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        if (error && typeof error === 'object' && 'response' in error) {
-          const apiError = error as ApiError;
-          console.error('Error details:', apiError.response?.data);
-          console.error('Error status:', apiError.response?.status);
-        }
+        console.error('Error fetching events:', error);
       }
     };
-
-    fetchData();
-  }, []);
+    fetchEvents();
+  }, [fetchSpentHours]);
 
   const renderReminderBlock = () => {
     if (spentHours < 5) {
@@ -162,7 +119,7 @@ const Reminder = () => {
               {/* Reminder Card */}
               <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                 <div className="p-1">
-                  <div className="flex aspect-square items-center justify-center ">
+                  <div className="flex items-center justify-center ">
                     {renderReminderBlock()}
                   </div>
                 </div>
@@ -172,7 +129,7 @@ const Reminder = () => {
               {events.map((event, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1">
-                    <div className="flex aspect-square items-center justify-center ">
+                    <div className="flex  items-center justify-center ">
                       <div className="flex flex-col bg-[hsl(var(--wallet-fill))] border border-[hsl(var(--wallet-border))] rounded-2xl py-5 px-5 w-72 h-40">
                         <div className="bg-[hsl(var(--category-tag-bg))] w-fit px-2 rounded-s rounded-e text-[hsl(var(--category-tag-text))]">
                           calendar
@@ -206,7 +163,7 @@ const Reminder = () => {
           <div className="flex flex-wrap gap-10 flex-row items-center justify-start px-14 mb-6">
             {/* Reminder Card */}
             <div className="p-1">
-              <div className="flex aspect-square items-center justify-center">
+              <div className="flex items-center justify-center">
                 {renderReminderBlock()}
               </div>
             </div>
@@ -214,7 +171,7 @@ const Reminder = () => {
             {/* Event Cards */}
             {events.map((event, index) => (
               <div key={index} className="p-1">
-                <div className="flex aspect-square items-center justify-center">
+                <div className="flex items-center justify-center">
                   <div className="flex flex-col bg-[hsl(var(--wallet-fill))] border border-[hsl(var(--wallet-border))] rounded-2xl py-5 px-5 w-72 h-40">
                     <div className="bg-[hsl(var(--category-tag-bg))] w-fit px-2 rounded-s rounded-e text-[hsl(var(--category-tag-text))]">
                       calendar

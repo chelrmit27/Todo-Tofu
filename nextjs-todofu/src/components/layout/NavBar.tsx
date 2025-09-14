@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import {
   HomeIcon,
   CalendarIcon,
-  AnalyticsIcon,
   LogoutIcon,
 } from '@/components/icons';
 import { ModeToggle } from '@/components/ui/mode-toggle';
@@ -40,9 +39,7 @@ export const NavBar: React.FC = () => {
         <Link href="/app/calendar">
           <CalendarIcon className={getIconClassName('/app/calendar')} />
         </Link>
-        <Link href="/app/analytics">
-          <AnalyticsIcon className={getIconClassName('/app/analytics')} />
-        </Link>
+        
       </div>
 
       {/* Bottom icons */}

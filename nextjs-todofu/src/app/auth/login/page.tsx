@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +11,7 @@ import { useAuth } from '@/stores/useAuth';
 import toast from 'react-hot-toast';
 import { ArrowLeft } from 'lucide-react';
 import { PublicOnlyRoute } from '@/features/auth/ProtectedRoute';
+import { useTheme } from '@/context/ThemeContext';
 
 interface LoginData {
   username: string;
@@ -31,6 +32,17 @@ export default function LoginPage() {
   const [error, setError] = useState<string>('');
   const router = useRouter();
   const { setUserSession } = useAuth();
+  const { theme, setTheme } = useTheme();
+
+  // Force light mode on login page
+  useEffect(() => {
+    if (!setTheme) return;
+    const originalTheme = theme;
+    setTheme('light');
+    return () => {
+      setTheme(originalTheme);
+    };
+  }, [theme, setTheme]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -121,7 +133,7 @@ export default function LoginPage() {
 
   return (
     <PublicOnlyRoute>
-      <div className="min-h-screen flex">
+      <div className="light min-h-screen flex">
       {/* Left Panel - Image */}
       <div className="hidden bg-background md:w-1/2  md:flex md:items-center md:justify-center relative">
         <Image 

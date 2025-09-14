@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select';
 import { api } from '@/lib/api';
 import { useWalletUtils } from '@/stores/useWalletUtils';
+import { useCategoryContext } from '@/context/CategoryContext';
 import toast from 'react-hot-toast';
 
 interface Task {
@@ -26,13 +27,12 @@ interface Task {
 
 const TaskList = ({
   tasks,
-  categories,
   refreshTaskList,
 }: {
   tasks: Task[];
-  categories: Record<string, { name: string; color?: string }>;
   refreshTaskList: () => void;
 }) => {
+  const { categories } = useCategoryContext();
   const { refreshWalletAfterTaskChange } = useWalletUtils();
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editedTask, setEditedTask] = useState<Task | null>(null);
@@ -152,34 +152,46 @@ const TaskList = ({
     }
   };
 
+  console.log('Loaded categories in TaskList:', categories);
+
+  if (!categories || Object.keys(categories).length === 0) {
+    return <div className="py-6 px-16">Loading categories...</div>;
+  }
+
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-6">Task List</h2>
       <div className="max-h-[340px] overflow-y-auto">
-        {tasks.map((task) => (
-          <div
-            key={task._id}
-            className="grid grid-cols-12 gap-4 py-2 mb-1 border border-gray-400 rounded-sm cursor-pointer"
-            onDoubleClick={() => handleDoubleClick(task)}
-          >
-            <div className="col-span-5">
-              <input
-                type="checkbox"
-                className="ml-3 mr-6"
-                checked={task.done}
-                onChange={() => handleToggleDone(task._id, task.done)}
-              />
-              {task.title}
-            </div>
+        {tasks.map((task) => {
+          let catId = task.categoryId;
+          if (typeof catId === 'object' && catId !== null && '_id' in catId) {
+            catId = (catId as { _id: string })._id;
+          }
+          return (
+            <div
+              key={task._id}
+              className="grid grid-cols-12 gap-4 py-2 mb-1 border border-gray-400 rounded-sm cursor-pointer"
+              onDoubleClick={() => handleDoubleClick(task)}
+            >
+              <div className="col-span-5">
+                <input
+                  type="checkbox"
+                  className="ml-3 mr-6"
+                  checked={task.done}
+                  onChange={() => handleToggleDone(task._id, task.done)}
+                />
+                {task.title}
+              </div>
 
-            <div className="col-span-3" style={{ color: task.color }}>
-              {categories[task.categoryId]?.name || 'Unknown Category'}
-            </div>
+              <div className="col-span-3" style={{ color: categories[catId]?.color }}>
+                {categories[catId]?.name || 'Unknown Category'}
+              </div>
 
-            <div className="col-span-2">{task.startHHMM}</div>
-            <div className="col-span-2">{task.endHHMM}</div>
-          </div>
-        ))}
+              <div className="col-span-2">{task.startHHMM}</div>
+              <div className="col-span-2">{task.endHHMM}</div>
+            </div>
+          );
+        })}
       </div>
 
       {editingTaskId && (
@@ -220,18 +232,16 @@ const TaskList = ({
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(categories).map(
-                        ([id, { name, color }]) => (
-                          <SelectItem
-                            key={id}
-                            value={id}
-                            className="text-sm"
-                            style={{ color }}
-                          >
-                            {name}
-                          </SelectItem>
-                        ),
-                      )}
+                      {Object.entries(categories).map(([id, { name, color }]) => (
+                        <SelectItem
+                          key={id}
+                          value={id}
+                          className="text-sm"
+                          style={{ color }}
+                        >
+                          {name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

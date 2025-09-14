@@ -38,13 +38,28 @@ export async function GET(request: NextRequest) {
     endOfDay.setHours(23, 59, 59, 999);
 
     // Get today's tasks for the user
-    const tasks = await TaskModel.find({
+    const rawTasks = await TaskModel.find({
       userId: user.userId,
       date: {
         $gte: startOfDay,
         $lte: endOfDay
       }
-    }).populate('categoryId') as TaskWithDuration[];
+    }).populate('categoryId');
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tasks: TaskWithDuration[] = rawTasks.map((task: any) => ({
+      _id: task._id.toString(),
+      title: task.title,
+      description: task.description ?? '',
+      start: task.start,
+      end: task.end,
+      categoryId: task.categoryId?._id?.toString() ?? '',
+      userId: task.userId,
+      status: task.status ?? '',
+      duration: task.duration ?? 0,
+      timeSpent: task.timeSpent ?? 0,
+      done: !!task.done,
+    }));
 
     console.log('Found', tasks.length, 'tasks for today');
 

@@ -26,10 +26,8 @@ export async function GET(request: NextRequest) {
     // Get today's events for the user
     const events = await EventModel.find({
       userId: user.userId,
-      date: {
-        $gte: startOfDay,
-        $lte: endOfDay
-      }
+      start: { $lt: endOfDay },
+      end: { $gt: startOfDay }
     });
 
     return corsResponse({

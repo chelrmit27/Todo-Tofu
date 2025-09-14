@@ -4,6 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import Image from 'next/image';
+import { useCategoryContext } from '@/context/CategoryContext';
 
 interface Task {
   _id: string;
@@ -18,31 +19,14 @@ interface Task {
   endHHMM?: string;
 }
 
-interface Category {
-  _id: string;
-  name: string;
-  color: string;
-}
-
 const PendingTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<Record<string, { name: string; color?: string }>>({});
+  const { categories } = useCategoryContext();
   const [loading, setLoading] = useState(true);
 
   const fetchCategoriesAndTasks = async () => {
     try {
       setLoading(true);
-
-      // Fetch categories
-      const categoryResponse = await api.get('/categories');
-      const transformedCategories = categoryResponse.data.reduce(
-        (acc: Record<string, { name: string; color?: string }>, category: Category) => {
-          acc[category._id] = { name: category.name, color: category.color };
-          return acc;
-        },
-        {},
-      );
-      setCategories(transformedCategories);
 
       // Fetch tasks for yesterday using local date calculation
       const currentDate = new Date();
@@ -58,7 +42,7 @@ const PendingTasks = () => {
       const tasksData = taskResponse.data.tasks || taskResponse.data;
       
       const tasksWithColors = tasksData.map((task: Task) => {
-        const category = transformedCategories[task.categoryId];
+        const category = categories[task.categoryId];
 
         // Convert start and end times to HH:mm format
         const formatTime = (dateString: string) => {
@@ -88,6 +72,7 @@ const PendingTasks = () => {
 
   useEffect(() => {
     fetchCategoriesAndTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDelete = async () => {
@@ -140,6 +125,8 @@ const PendingTasks = () => {
     }
   };
 
+  console.log('Loaded categories in PendingTasks:', categories);
+
   if (loading) {
     return (
       <div>
@@ -147,6 +134,10 @@ const PendingTasks = () => {
         <div>Loading tasks...</div>
       </div>
     );
+  }
+
+  if (!categories || Object.keys(categories).length === 0) {
+    return <div className="py-6 px-16">Loading categories...</div>;
   }
 
   if (tasks.length === 0) {
@@ -168,37 +159,43 @@ const PendingTasks = () => {
       <h2 className="text-2xl font-semibold mb-6">Pending Tasks</h2>
       <div>
         <div className="max-h-[400px] overflow-y-auto">
-          {tasks.map((task) => (
-            <div
-              key={task._id}
-              className="grid grid-cols-12 gap-4 py-2 mb-1 border border-gray-400 rounded-sm"
-            >
-              <div className="col-span-5">
-                <input
-                  type="checkbox"
-                  className="ml-3 mr-6"
-                  checked={!!task.selected}
-                  onChange={(e) => {
-                    setTasks((prevTasks) =>
-                      prevTasks.map((t) =>
-                        t._id === task._id
-                          ? { ...t, selected: e.target.checked }
-                          : t,
-                      ),
-                    );
-                  }}
-                />
-                {task.title}
-              </div>
+          {tasks.map((task) => {
+            let catId = task.categoryId;
+            if (typeof catId === 'object' && catId !== null && '_id' in catId) {
+              catId = (catId as { _id: string })._id;
+            }
+            return (
+              <div
+                key={task._id}
+                className="grid grid-cols-12 gap-4 py-2 mb-1 border border-gray-400 rounded-sm"
+              >
+                <div className="col-span-5">
+                  <input
+                    type="checkbox"
+                    className="ml-3 mr-6"
+                    checked={!!task.selected}
+                    onChange={(e) => {
+                      setTasks((prevTasks) =>
+                        prevTasks.map((t) =>
+                          t._id === task._id
+                            ? { ...t, selected: e.target.checked }
+                            : t,
+                        ),
+                      );
+                    }}
+                  />
+                  {task.title}
+                </div>
 
-              <div className="col-span-3" style={{ color: task.color }}>
-                {categories[task.categoryId]?.name || 'Unknown Category'}
-              </div>
+                <div className="col-span-3" style={{ color: categories[catId]?.color }}>
+                  {categories[catId]?.name || 'Unknown Category'}
+                </div>
 
-              <div className="col-span-2">{task.startHHMM}</div>
-              <div className="col-span-2">{task.endHHMM}</div>
-            </div>
-          ))}
+                <div className="col-span-2">{task.startHHMM}</div>
+                <div className="col-span-2">{task.endHHMM}</div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="flex flex-row justify-end gap-3 mt-6">

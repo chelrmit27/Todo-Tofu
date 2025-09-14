@@ -1,4 +1,4 @@
-import { Schema, model, models, Document } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
 export interface IReminder extends Document {
   userId: Schema.Types.ObjectId;
@@ -21,4 +21,4 @@ const reminderSchema = new Schema<IReminder>(
   },
 );
 
-export const ReminderModel = models.Reminder || model<IReminder>('Reminder', reminderSchema);
+export const ReminderModel = model<IReminder>('Reminder', reminderSchema);

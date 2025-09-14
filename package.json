@@ -4,15 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --parallel dev",
-    "postinstall": "cd server && pnpm install && cd ../nextjs-todofu && pnpm install",
-    "build": "cd nextjs-todofu && pnpm install && pnpm run build",
+    "dev": "cd nextjs-todofu && pnpm dev",
+    "build": "cd nextjs-todofu && pnpm build",
     "start": "cd nextjs-todofu && pnpm start",
-    "preview": "cd nextjs-todofu && pnpm start",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "lint": "cd nextjs-todofu && pnpm lint",
+    "lint:fix": "cd nextjs-todofu && pnpm lint:fix",
+    "format": "cd nextjs-todofu && pnpm format",
+    "format:check": "cd nextjs-todofu && pnpm format:check"
   },
   "dependencies": {
     "@iconify/react": "^6.0.1",

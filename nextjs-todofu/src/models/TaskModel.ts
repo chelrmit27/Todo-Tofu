@@ -1,4 +1,4 @@
-import { Schema, model, models, Document } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
 export interface ITask extends Document {
   userId: Schema.Types.ObjectId;
@@ -41,4 +41,4 @@ const taskSchema = new Schema<ITask>(
   },
 );
 
-export const TaskModel = models.Task || model<ITask>('Task', taskSchema);
+export const TaskModel = model<ITask>('Task', taskSchema);

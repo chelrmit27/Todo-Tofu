@@ -6,7 +6,6 @@ import {
   ReactNode,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import { api } from '../lib/api';
 
 // Constants for inactivity timeout
 const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
@@ -133,45 +132,8 @@ const removeUser = async (): Promise<void> => {
   
   localStorage.removeItem('token');
   localStorage.removeItem('USER');
-  localStorage.removeItem('lastAnalyticsUpdate');
 };
 
-// Helper function to update weekly analytics
-const updateWeeklyAnalytics = async (): Promise<void> => {
-  try {
-    // Ensure we're on client side
-    if (typeof window === 'undefined') {
-      console.log('🌍 Server side, skipping analytics update');
-      return;
-    }
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('📊 No token available for analytics update');
-      return;
-    }
-
-    // Check if we've already updated today
-    const lastUpdate = localStorage.getItem('lastAnalyticsUpdate');
-    // Use local date instead of UTC date
-    const today = new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD format in local timezone
-
-    if (lastUpdate === today) {
-      console.log('📊 Weekly analytics already updated today');
-      return;
-    }
-
-    console.log('📊 Updating weekly analytics...');
-
-    await api.post('/aggregation/analytics/weekly/update');
-
-    localStorage.setItem('lastAnalyticsUpdate', today);
-    console.log('📊 Weekly analytics updated successfully');
-  } catch (error) {
-    console.error('📊 Error updating weekly analytics:', error);
-    // Don't throw the error to prevent blocking other operations
-  }
-};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUserState] = useState<AppUser | null>(null);
@@ -211,8 +173,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUserState(userData);
           setIsAuth(true);
           console.log('✅ User authenticated successfully');
-          // Update weekly analytics when user loads (once per day)
-          await updateWeeklyAnalytics();
         } else {
           setIsAuth(false);
           console.log('❌ User not authenticated');
@@ -237,12 +197,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuth(true);
       console.log('✅ User session set successfully');
       
-      // Update weekly analytics after a small delay to ensure token is available
-      setTimeout(() => {
-        updateWeeklyAnalytics().catch(error => {
-          console.error('⚠️ Analytics update failed (non-blocking):', error);
-        });
-      }, 100);
     } catch (error) {
       console.error('🚨 Failed to set user session:', error);
       throw error;

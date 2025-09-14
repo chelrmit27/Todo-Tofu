@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <section className="relative overflow-hidden bg-[#F8F7F5] min-h-screen">
+    <section className="light relative overflow-hidden bg-[#F8F7F5] min-h-screen">
       {/* Yellow curved ribbon (no text) - Full screen width */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <Image

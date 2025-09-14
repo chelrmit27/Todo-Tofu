@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
 import { PublicOnlyRoute } from '@/features/auth/ProtectedRoute';
+import { useTheme } from '@/context/ThemeContext';
 
 const userRegistrationSchema = z.object({
   username: z
@@ -62,6 +63,16 @@ export default function RegisterPage() {
   const [error, setError] = useState<string>('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
+
+  // Force light mode on register page
+  useEffect(() => {
+    const originalTheme = theme;
+    setTheme('light');
+    return () => {
+      setTheme(originalTheme);
+    };
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -192,7 +203,7 @@ export default function RegisterPage() {
 
   return (
     <PublicOnlyRoute>
-      <div className="min-h-screen flex">
+      <div className="light min-h-screen flex">
       {/* Left Panel - Image */}
       <div className="hidden bg-background md:w-1/2  md:flex md:items-center md:justify-center relative">
         <Image 

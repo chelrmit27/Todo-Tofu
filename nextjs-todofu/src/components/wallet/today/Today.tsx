@@ -27,9 +27,9 @@ interface Category {
 
 const Today = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<
-    Record<string, { name: string; color?: string }>
-  >({});
+  // const [categories, setCategories] = useState<
+  //   Record<string, { name: string; color?: string }>
+  // >({});
 
   const fetchTasksAndCategories = async () => {
     try {
@@ -50,7 +50,7 @@ const Today = () => {
         },
         {},
       );
-      setCategories(transformedCategories);
+      // setCategories(transformedCategories);
 
       // Fetch tasks - use local date instead of UTC to avoid timezone issues
       const currentDate = new Date();
@@ -106,7 +106,6 @@ const Today = () => {
 
       <TaskList
         tasks={tasks}
-        categories={categories}
         refreshTaskList={refreshTaskList}
       />
     </div>
