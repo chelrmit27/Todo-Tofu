@@ -66,3 +66,5 @@ export async function POST(request: NextRequest) {
 export async function OPTIONS() {
   return corsResponse({}, 200);
 }
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);

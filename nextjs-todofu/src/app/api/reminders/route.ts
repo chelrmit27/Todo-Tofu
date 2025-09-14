@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('MONGODB_URI:', process.env.MONGODB_URI);
     const user = await getAuthUser(request);
     if (!user) {
       return corsResponse({ error: 'User is not authenticated' }, 401);
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
     await newReminder.save();
     return corsResponse(newReminder, 201);
   } catch (error) {
+    console.error('Error in reminders route:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     return corsResponse({ error: `Error creating new reminder: ${errorMessage}` }, 400);
   }

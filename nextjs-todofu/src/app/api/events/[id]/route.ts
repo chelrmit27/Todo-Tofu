@@ -109,3 +109,5 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     );
   }
 }
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);

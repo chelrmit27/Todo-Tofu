@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
 
     return corsResponse(response, 200);
   } catch (error) {
-    console.error('Error fetching today\'s tasks:', error);
+    console.error('Error in tasks today route:', error);
     return corsResponse({ message: 'Internal server error' }, 500);
   }
 }
@@ -94,3 +94,5 @@ export async function GET(request: NextRequest) {
 export async function OPTIONS() {
   return corsResponse({}, 200);
 }
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);

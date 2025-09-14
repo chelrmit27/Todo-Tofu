@@ -18,6 +18,7 @@ export async function OPTIONS() {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('MONGODB_URI:', process.env.MONGODB_URI);
     await connectToDatabase();
     
     const body = await request.json();
@@ -87,8 +88,8 @@ export async function POST(request: NextRequest) {
       token,
     }, 201);
     
-  } catch (error: unknown) {
-    console.error('User Registration Error:', error);
+  } catch (error) {
+    console.error('Error in auth register route:', error);
     return corsResponse({ message: 'Internal server error' }, 500);
   }
 }

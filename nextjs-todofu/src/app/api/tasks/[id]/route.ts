@@ -37,7 +37,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return corsResponse(updatedTask, 200);
   } catch (error) {
-    console.error('Error updating task:', error);
+    console.error('Error in tasks [id] route:', error);
     return corsResponse({ message: 'Internal server error' }, 500);
   }
 }
@@ -67,7 +67,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     return corsResponse({ message: 'Task deleted successfully' }, 200);
   } catch (error) {
-    console.error('Error deleting task:', error);
+    console.error('Error in tasks [id] route:', error);
     return corsResponse({ message: 'Internal server error' }, 500);
   }
 }
@@ -75,3 +75,5 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 export async function OPTIONS() {
   return corsResponse({}, 200);
 }
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);

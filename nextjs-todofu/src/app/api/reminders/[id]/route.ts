@@ -23,6 +23,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     await reminder.save();
     return corsResponse(reminder, 200);
   } catch (error) {
+    console.error('Error in reminders [id] route:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     return corsResponse({ error: `Error updating reminder: ${errorMessage}` }, 400);
   }
@@ -42,6 +43,7 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
     }
     return corsResponse({ message: 'Reminder deleted successfully' }, 200);
   } catch (error) {
+    console.error('Error in reminders [id] route:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     return corsResponse({ error: `Error deleting reminder: ${errorMessage}` }, 400);
   }
@@ -50,3 +52,5 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
 export async function OPTIONS() {
   return corsResponse({}, 200);
 }
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);

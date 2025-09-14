@@ -15,6 +15,8 @@ export async function GET(request: NextRequest) {
     // Connect to database
     await connectToDatabase();
 
+    console.log('MONGODB_URI:', process.env.MONGODB_URI);
+
     // Get today's date boundaries
     const today = new Date();
     const startOfDay = new Date(today);
@@ -35,7 +37,7 @@ export async function GET(request: NextRequest) {
       totalEvents: events.length
     }, 200);
   } catch (error) {
-    console.error('Error fetching today\'s events:', error);
+    console.error('Error in events today route:', error);
     return corsResponse({ message: 'Internal server error' }, 500);
   }
 }
