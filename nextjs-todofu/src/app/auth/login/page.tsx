@@ -218,7 +218,7 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Forgot Password */}
+            {/* Forgot Password
             <div className="text-right">
               <Link
                 href="/auth/forgot-password"
@@ -226,7 +226,7 @@ export default function LoginPage() {
               >
                 Forgot password
               </Link>
-            </div>
+            </div> */}
 
             {/* Sign In Button */}
             <Button
