@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { connectToDatabase } from '@/lib/mongodb';
 import { corsResponse, handlePreflight } from '@/lib/cors';
 import { UserServices } from '@/services/UserServices';
@@ -16,10 +16,16 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
+  // Check required environment variables
+  for (const k of ['MONGODB_URI','JWT_SECRET']) {
+    if (!process.env[k]) throw new Error(`Missing env: ${k}`);
+  }
   try {
-    console.log('MONGODB_URI:', process.env.MONGODB_URI);
-    
-    await connectToDatabase();
+    // Try DB connect and handle error
+    try { await connectToDatabase(); } catch (e) {
+      console.error('DB connect fail', e);
+      return corsResponse({ error: 'DB connect' }, 500);
+    }
     
     const body = await request.json();
     
