@@ -72,7 +72,7 @@ export default function RegisterPage() {
     return () => {
       setTheme(originalTheme);
     };
-  }, []);
+  }, [theme, setTheme]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
